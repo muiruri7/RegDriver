@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+    
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .form-group {
+            margin-bottom: 20px;
+        }
+    
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    
+        .error {
+            color: red;
+        }
+    
+        .success {
+            color: green;
+        }
+    
+        input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        /* Navigation Menu Styles */
+        nav ul {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    
+        nav li {
+            margin-left: 10px;
+        }
+    
+        nav li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    
+        nav li a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+    
+            nav li {
+                margin-left: 0;
+                margin-bottom: 5px;
+            }
+    
+            .container {
+                padding: 10px;
+            }
+        }
+    
+        /* Responsive adjustments */
+        @media screen and (max-width: 720px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .form-group label {
+                margin-bottom: 3px;
+            }
+    
+            .form-group input[type="text"],
+            .form-group input[type="password"],
+            .form-group select {
+                padding: 8px;
+            }
+    
+            .form-group button {
+                padding: 8px;
+            }
+        }
+    
+    </style>
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register Driver</a></li>
+                <li><a href="/admin">Driver Details</a></li>
+                <li><a href="/edit_driver">Edit Driver Details</a></li>
+                <li><a href="/management">Driver Management</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h2>Driver Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Date of Birth</th>
+                <th>License</th>
+                <th>Vehicle Type</th>
+                <th>Vehicle Model</th>
+                <th>Vehicle Classification</th>
+                <th>License Plate Number></th>
+                <th>Organization</th>
+                <th>Start Date</th>
+                <th>Routes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+            <tr>
+                <td>{{ driver[1] }}</td>
+                <td>{{ driver[2] }}</td>
+                <td>{{ driver[3] }}</td>
+                <td>{{ driver[4] }}</td>
+                <td>{{ driver[5] }}</td>
+                <td>{{ driver[6] }}</td>
+                <td>{{ driver[7] }}</td>
+                <td>{{ driver[8] }}</td>
+                <td>{{ driver[9] }}</td>
+                <td>{{ driver[10] }}</td>
+                <td>{{ driver[11] }}</td>
+                <td>
+                    <!-- Delete Button -->
+                    <form action="{{ url_for('delete_driver') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
+                        <input type="hidden" name="driver_id" value="{{ driver[0] }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <!-- Edit Button -->
+                    <a href="{{ url_for('edit_driver', driver_id=driver[0]) }}" class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

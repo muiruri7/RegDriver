@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Driver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+    
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .form-group {
+            margin-bottom: 20px;
+        }
+    
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    
+        .error {
+            color: red;
+        }
+    
+        .success {
+            color: green;
+        }
+    
+        input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        /* Navigation Menu Styles */
+        nav ul {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    
+        nav li {
+            margin-left: 10px;
+        }
+    
+        nav li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    
+        nav li a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+    
+            nav li {
+                margin-left: 0;
+                margin-bottom: 5px;
+            }
+    
+            .container {
+                padding: 10px;
+            }
+        }
+    
+        /* Responsive adjustments */
+        @media screen and (max-width: 720px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .form-group label {
+                margin-bottom: 3px;
+            }
+    
+            .form-group input[type="text"],
+            .form-group input[type="password"],
+            .form-group select {
+                padding: 8px;
+            }
+    
+            .form-group button {
+                padding: 8px;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register Driver</a></li>
+                <li><a href="/admin">Driver Details</a></li>
+                <li><a href="/edit_driver">Edit Driver Details</a></li>
+                <li><a href="/management">Driver Management</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Register Driver</h1>
+        <form method="POST" action="/register">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label for="license">Driver's License Details:</label>
+                <input type="text" id="license" name="license" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicle_type">Vehicle Type:</label>
+                <input type="text" id="vehicle_type" name="vehicle_type" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicle_model">Vehicle Model:</label>
+                <input type="text" id="vehicle_model" name="vehicle_model" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicle_classification">Vehicle Classification:</label>
+                <select id="vehicle_classification" name="vehicle_classification" required>
+                    <option value="matatu">Matatu</option>
+                    <option value="bus">Bus</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="license-plate-number">License Plate Number</label>
+                <input type="text" id="licenseplate-number" name="license_plate_number" required>
+            </div>
+            <div class="form-group">
+                <label for="organization">Organization:</label>
+                <select id="organization" name="organization" required>
+                    <option value="Super Metro">Super Metro</option>
+                    <option value="Lopha Travellers">Lopha Travellers</option>
+                    <option value="2NK SACCO">2NK SACCO</option>
+                    <option value="Manchester Travellers">Manchester Travellers</option>
+                    <option value="Neo Kenya Mpya SACCO">Neo Kenya Mpya SACCO</option>
+                    <option value="4NTE SACCO">4NTE SACCO</option>
+                    <option value="Naekana SACCO">Naekana SACCO</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="start_date">Date Started with Organization:</label>
+                <input type="date" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="matatuRoute">Matatu Route:</label>
+                <select id="matatuRoute" name="matatuRoute" required>
+                    <option value="1">Route 1: Ngong Road, Citam/N.P.C. valley Road, the Junction Mall, Dagoretti</option>
+                    <option value="2">Route 2: Ngong Road, Citam/N.P.C. Valley Road, Junction Mall, Dagoretti</option>
+                    <option value="3">Route 3: Ngong Road, Adams Arcade, Dagoretti Corner</option>
+                    <option value="4">Route 4: Ngong Road, Adams, Dagorreti</option>
+                    <option value="6">Route 6: Eastleigh area, Pangani Girls, Pangani Shopping Center, Kariokor Market</option>
+                    <option value="7C">Route 7C: Community, Doctors Plaza Silver Springs Hotel, Kenyatta Nairobi Hospital, Upper Hill area</option>
+                    <option value="8">Route 8: Ngong Road, Kibera slums, Adams Arcade, Toi market</option>
+                    <option value="9">Route 9: Eastleigh area, Ngara civil servants housing scheme, KIE, Pangani roundabout, Fig Tree Trade Center Ngara</option>
+                    <option value="11">Route 11: South B, Bellevue</option>
+                    <option value="15">Route 15: Nyayo Stadium, Carnivore Simba Saloon, Nairobi West, Madaraka, T-mall, Wilson Airport, Langata Shopping Center, Langata Cemetery, Barracks, Uhuru Gardens, Otiende, Nairobi Safari Walk, Nairobi National Park, Nairobi Animal Orphanage</option>
+                    <option value="14">Route 14: Langata Road to T-Mall, Strathmore University, Nairobi West</option>
+                    <option value="17B">Route 17B: Thika Road, Roysambu, Kasarani, Santon, St Francis Hospital, Mwiki, Thika superhighway</option>
+                    <option value="23">Route 23: Kangemi, Westlands, Uhuru Highway, Kangemi, A.B.C. Place, Safaricom House, Uhuru highway</option>
+                    <option value="24">Route 24: Karen Shopping Center, Hardy, Bogani, Bomas of Kenya, Galleria Shopping Mall, Catholic University, Kenya School of Law, Nairobi Academy, Hillcrest international school, animal protection, Co-Op Bank Training Center, Giraffe Center, Karen C School, all Langata routes</option>
+                    <option value="25">Route 25: Baba Ndogo, Thika road to GSU flyover</option>
+                    <option value="33">Route 33: Ngumo Estate, KNH, Mbagathi, Masai Market</option>
+                    <option value="33">Route 33: Embakasi route, via Jogoo Roads, Donholm, City Stadium, Pipeline, Tumaini Estate, Fedha Estate and Avenue Estate</option>
+                    <option value="34">Route 34: Langata area through Mbagathi Road, K.N.H., T-mall, Wilson airport, Carnivore, Langata Shopping Center</option>
+                    <option value="34">Route 34 (at times, they also carry those to Mombasa Road): JKIA, Jogoo Road, Embakasi, Fedha, Donholm, Pipeline, Utawala</option>
+                    <option value="35/60">Route 35/60: Umoja Inner Core, Umoja 1 and Umoja 2</option>
+                    <option value="44">Route 44: Kahawa West, Kamiti Maximum Prison, Zimmerman, Githurai 44 Roysambu, USIU, Farmers Choice, Northern Bypass</option>
+                    <option value="45">Route 45: Thika Road, Thika Superhighway, Githurai 45</option>
+                    <option value="58">Route 58: Buru Buru</option>
+                    <option value="100">Route 100: Kiambu town, Kiambu Road, Sharks Palace, Kiambu Road, CID, Center, Ridgeways, Rock City Kiambu road, Muthaiga roundabout</option>
+                    <option value="102">Route 102: Kikuyu Township, Dagoretti, Ngong Road, Junction Mall</option>
+                    <option value="105">Route 105: Kikuyu via Uhuru Highway, Westlands, Kangemi, Uthiru, Kinoo</option>
+                    <option value="106">Route 106: Banana, Mucatha, Village Market</option>
+                    <option value="110">Route 110: Kitengela, Mlolongo, Athi River</option>
+                    <option value="111">Route 111: Ngong, Ngong Road, Dagoretti Corner(at times Kiserian)</option>
+                    <option value="125/126">Route 125 or 126: Catholic University, Multimedia University, Nairobi National Park, Safari Walk, Langata Barracks, Galleria, Brookhouse International Schools, Langata Hospital, Langata Police Station, Langata Cemetery, Kiserian, Ongata Rongai</option>
+                    <option value="146">Route 146: Ruiru, Thika Road, Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University, Ruiru bypass</option>
+                    <option value="237">Route 237: Thika town all routes on Thika Road, Kahawa ,Ruiru</option>
+                </select>
+            </div>
+            <h3>Matatu Route Selector</h3>
+    
+      <!-- Select list for origins -->
+      <label for="origin">Origin:</label>
+      <select id="origin" name="origin">
+        <option value="Ngong Road">Ngong Road</option>
+        <option value="Eastleigh area">Eastleigh area</option>
+        <option value="Community">Community</option>
+        <option value="South B, Bellevue">South B, Bellevue</option>
+        <option value="Nyayo Stadium">Nyayo Stadium</option>
+        <option value="Langata Road to T-Mall">Langata Road to T-Mall</option>
+        <option value="Thika Road">Thika Road</option>
+        <option value="Kangemi, Westlands">Kangemi, Westlands</option>
+        <option value="Karen Shopping Center">Karen Shopping Center</option>
+        <option value="Baba Ndogo">Baba Ndogo</option>
+        <option value="Ngumo Estate">Ngumo Estate</option>
+        <option value="Embakasi route">Embakasi route</option>
+        <option value="Langata area through Mbagathi Road">Langata area through Mbagathi Road</option>
+        <option value="JKIA">JKIA</option>
+        <option value="Umoja Inner Core, Umoja 1 and Umoja 2">Umoja Inner Core, Umoja 1 and Umoja 2</option>
+        <option value="Kahawa West">Kahawa West</option>
+        <option value="Thika town">Thika town</option>
+        <option value="Buru Buru">Buru Buru</option>
+        <option value="Kiambu town">Kiambu town</option>
+        <option value="Kikuyu Township">Kikuyu Township</option>
+        <option value="Banana">Banana</option>
+        <option value="Kitengela">Kitengela</option>
+        <option value="Ruiru">Ruiru</option>
+        <option value="Catholic University">Catholic University</option>
+        <option value="Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University">Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University</option>
+        <option value="Ruiru bypass">Ruiru bypass</option>
+        <option value="Thika town all routes on Thika Road, Kahawa ,Ruiru">Thika town all routes on Thika Road, Kahawa ,Ruiru</option>
+      </select>
+    
+      <br><br>
+    
+      <!-- Select list for destinations -->
+      <label for="destination">Destination:</label>
+      <select id="destination" name="destination">
+        <option value="General Post Office (GPO)">General Post Office (GPO)</option>
+        <option value="GPO or KBS stage">GPO or KBS stage</option>
+        <option value="GPO">GPO</option>
+        <option value="Kencom or G.P.O.">Kencom or G.P.O.</option>
+        <option value="Pick a matatu from Accra Road, along Tom Mboya Street">Pick a matatu from Accra Road, along Tom Mboya Street</option>
+        <option value="Citi Hoppa or KBS buses at Kencom, adjacent to Hilton Hotel along Moi Avenue">Citi Hoppa or KBS buses at Kencom, adjacent to Hilton Hotel along Moi Avenue</option>
+        <option value="Railways bus station">Railways bus station</option>
+        <option value="Board matatu at Tom Mboya Street or the entrance of Accra Road">Board matatu at Tom Mboya Street or the entrance of Accra Road</option>
+        <option value="Board a matatu at the Afya Centre or near the main stage opposite Afya Center">Board a matatu at the Afya Centre or near the main stage opposite Afya Center</option>
+        <option value="Board a matatu at the bus station behind Afya Centre">Board a matatu at the bus station behind Afya Centre</option>
+        <option value="Pick a matatu from Kenya Bus Station or outside BS near the St Peter Claviers Catholic Church">Pick a matatu from Kenya Bus Station or outside BS near the St Peter Claviers Catholic Church</option>
+        <option value="Board the Matatu at Odeon Cinema / Latema Road off Tom Mboya Street">Board the Matatu at Odeon Cinema / Latema Road off Tom Mboya Street</option>
+        <option value="KBS, Mfangano Street or Kencom House">KBS, Mfangano Street or Kencom House</option>
+        <option value="Timboroa lane">Timboroa lane</option>
+        <option value="Opp St. Peter Claviers Catholic Church, near OTC or Salvation area">Opp St. Peter Claviers Catholic Church, near OTC or Salvation area</option>
+        <option value="Board a matatu at the Muthurwa Market or along Tom Mboya Street opposite National Archives">Board a matatu at the Muthurwa Market or along Tom Mboya Street opposite National Archives</option>
+        <option value="St Peters Church opposite OTC">St Peters Church opposite OTC</option>
+        <option value="Kencom or Ambassador Stage">Kencom or Ambassador Stage</option>
+        <option value="Ronald Ngara Street, Mfangano Street intercept, opposite Naivas Supermarket">Ronald Ngara Street, Mfangano Street intercept, opposite Naivas Supermarket</option>
+        <option value="Along Ronald Ngara Street to Ring Road Ngala Street">Along Ronald Ngara Street to Ring Road Ngala Street</option>
+        <option value="Nakumatt Ronald Ngala Street opposite poster">Nakumatt Ronald Ngala Street opposite poster</option>
+        <option value="Tom Mboya Street opposite National Archives">Tom Mboya Street opposite National Archives</option>
+        <option value="Pick the matatu along Ronald Ngala Street to Ring-road Ngara or opposite St. Peters Claviers Catholic Church">Pick the matatu along Ronald Ngala Street to Ring-road Ngara or opposite St. Peters Claviers Catholic Church</option>
+        <option value="BS or Kencom">BS or Kencom</option>
+        <option value="Tom Mboya Street near National Archives or railway station">Tom Mboya Street near National Archives or railway station</option>
+        <option value="Koja Mosque stage">Koja Mosque stage</option>
+        <option value="Railways Entrance, near the station">Railways Entrance, near the station</option>
+        <option value="Kencom, Railways bus station">Kencom, Railways bus station</option>
+        <option value="Mumbi Road off Ronald Ngala Street">Mumbi Road off Ronald Ngala Street</option>
+        <option value="Mumbi Road off Ronald Ngala Street">Mumbi Road off Ronald Ngala Street</option>
+      </select>
+    
+      <br><br>
+    
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
