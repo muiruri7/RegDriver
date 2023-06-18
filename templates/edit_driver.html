@@ -168,33 +168,33 @@
     </header>
     <h2>Edit Driver</h2>
     {% if driver %}
-        <form method="POST" action="/edit_driver/{{ driver[0] }}">
+        <form method="POST" action="{{ url_for('edit_driver', driver_id=driver[11]) }}">
             <label>Name:</label>
-            <input type="text" name="name" value="{{ driver[1] }}"><br>
+            <input type="text" name="name" value="{{ driver[0] }}"><br>
             <label>Gender:</label>
-            <input type="text" name="gender" value="{{ driver[2] }}"><br>
+            <input type="text" name="gender" value="{{ driver[1] }}"><br>
             <label>Date of Birth:</label>
-            <input type="text" name="dob" value="{{ driver[3] }}"><br>
+            <input type="text" name="dob" value="{{ driver[2] }}"><br>
             <label>License:</label>
-            <input type="text" name="license" value="{{ driver[4] }}"><br>
+            <input type="text" name="license" value="{{ driver[3] }}"><br>
             <label>Vehicle Type:</label>
-            <input type="text" name="vehicle_type" value="{{ driver[5] }}"><br>
+            <input type="text" name="vehicle_type" value="{{ driver[4] }}"><br>
             <label>Vehicle Model:</label>
-            <input type="text" name="vehicle_model" value="{{ driver[6] }}"><br>
+            <input type="text" name="vehicle_model" value="{{ driver[5] }}"><br>
             <label>Vehicle Classification:</label>
-            <input type="text" name="vehicle_classification" value="{{ driver[7] }}"><br>
+            <input type="text" name="vehicle_classification" value="{{ driver[6] }}"><br>
             <label>License Plate Number:</label>
-            <input type="text" name="license_plate_number" value="{{ driver[8] }}"><br>
+            <input type="text" name="license_plate_number" value="{{ driver[7] }}"><br>
             <label>Organization:</label>
-            <input type="text" name="organization" value="{{ driver[9] }}"><br>
+            <input type="text" name="organization" value="{{ driver[8] }}"><br>
             <label>Start Date:</label>
-            <input type="text" name="start_date" value="{{ driver[10] }}"><br>
+            <input type="text" name="start_date" value="{{ driver[9] }}"><br>
             <label>Routes:</label>
-            <input type="text" name="routes" value="{{ driver[11] }}"><br>
+            <input type="text" name="routes" value="{{ driver[10] }}"><br>
             <input type="submit" value="Save">
         </form>
     {% else %}
         <p>Driver not found</p>
     {% endif %}
-</body>
+    
 </html>

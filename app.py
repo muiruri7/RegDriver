@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash, session, url_for
 from flask_mysqldb import MySQL
 from datetime import datetime
+from functools import wraps
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 
 app = Flask(__name__)
@@ -30,13 +31,25 @@ def login(username, password):
     else:
         return "Login failed"
 
+def login_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session:
+            return redirect(url_for('login'))
+        return func(*args, **kwargs)
+    return decorated_function
+
 def store_driver_registration_data(name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number,
-                                  organization, start_date, route_number):
+                                  organization, start_date, route_number=None):
+    # Set default value for route_number if it is None or empty
+    if not route_number:
+        route_number = 'N/A'
+
     cursor = mysql.connection.cursor()
     cursor.execute(
         "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, "
-        "organization, start_date, route_number) "  # Added 'routes' column
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  # Set initial value to NULL
+        "organization, start_date, route_number) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  
         (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization,
          start_date, route_number)
     )
@@ -134,13 +147,17 @@ def register_driver():
 
     return render_template('register.html')
 
-
-@app.route('/edit_driver', methods=['GET', 'POST'])
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
-def edit_driver(driver_id=None):
+def edit_driver(driver_id):
+    # Retrieve driver information from the database
+    cursor = mysql.connection.cursor()
+    query = "SELECT * FROM drivers WHERE id=%s"
+    cursor.execute(query, (driver_id,))
+    driver = cursor.fetchone()
+    cursor.close()
+
     if request.method == 'POST':
-        # Retrieve the updated values from the form
-        driver_id = request.form['driver_id']
+        # Get updated driver information from the form
         name = request.form['name']
         gender = request.form['gender']
         dob = request.form['dob']
@@ -153,38 +170,17 @@ def edit_driver(driver_id=None):
         start_date = request.form['start_date']
         routes = request.form['routes']
 
-        # Update the corresponding driver in the MySQL table
+        # Update driver information in the database
         cursor = mysql.connection.cursor()
-        cursor.execute(
-            "UPDATE drivers SET Name = %s, Gender = %s, DateOfBirth = %s, DriversLicenseNumber = %s, VehicleType = %s, VehicleModel = %s, VehicleClassification = %s, LicensePlateNumber = %s, Organization = %s, DateStartedInOrganization = %s, RouteNumber = %s WHERE id = %s",
-            (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number,
-             organization, start_date, routes, driver_id))
+        query = "UPDATE drivers SET Name=%s, Gender=%s, dob=%s, license=%s, vehicle_type=%s, vehicle_model=%s, vehicle_classification=%s, license_plate_number=%s, organization=%s, start_date=%s, route_number=%s WHERE id=%s"
+        cursor.execute(query, (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization, start_date, routes, driver_id))
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for('edit_driver', driver_id=driver_id))
+        return redirect(url_for('management'))
 
-    else:
-        if driver_id:
-            # Fetch the specific driver from the MySQL table
-            cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
-            driver = cursor.fetchone()
-            cursor.close()
+    return render_template('edit_driver.html', driver=driver)
 
-            if driver:
-                return render_template('edit_driver.html', driver=driver)
-            else:
-                return "Driver not found"
-
-        else:
-            # Fetch all drivers from the MySQL table
-            cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM drivers")
-            drivers = cursor.fetchall()
-            cursor.close()
-
-            return render_template('edit_driver.html', drivers=drivers)
 
 @app.route('/delete_driver', methods=['POST'])
 def delete_driver():
