@@ -208,6 +208,10 @@ def post_edit_driver():
     driver_id = request.form['driver_id']
     return redirect(url_for('edit_driver', driver_id=driver_id))
 
+@app.route('/management')
+def management():
+    return render_template('management.html')
+
 @app.route('/clock_in_out', methods=['POST'])
 def clock_in_out():
     driver_id = request.form.get('driver_id')
