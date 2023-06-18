@@ -35,8 +35,8 @@ def store_driver_registration_data(name, gender, dob, license, vehicle_type, veh
     cursor = mysql.connection.cursor()
     cursor.execute(
         "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, "
-        "organization, start_date, route_number, routes) "  # Added 'routes' column
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL)",  # Set initial value to NULL
+        "organization, start_date, route_number) "  # Added 'routes' column
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  # Set initial value to NULL
         (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization,
          start_date, route_number)
     )
@@ -94,16 +94,18 @@ def admin():
         drivers = cursor.fetchall()
         cursor.close()
 
+        driver_id = None  # Initialize the driver_id variable
+
         if request.method == 'POST':
             driver_id = request.form.get('driver_id')
             if driver_id:
                 cursor = mysql.connection.cursor()
-                cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
+                cursor.execute("DELETE FROM drivers WHERE driver_id = %s", (driver_id,))
                 mysql.connection.commit()
                 cursor.close()
                 flash('Driver data deleted successfully!')
 
-        return render_template('admin.html', drivers=drivers)
+        return render_template('admin.html', drivers=drivers, driver_id=driver_id)
     else:
         return redirect(url_for('login'))
 
@@ -120,29 +122,9 @@ def register_driver():
         license_plate_number = request.form.get('license_plate_number')
         organization = request.form.get('organization')
         start_date = request.form.get('start_date')
-        source = request.form.get('source')  # Corrected variable name
-        destination = request.form.get('destination')
+        route_number = request.form.get('route_number')
 
-        name_min_length = 3
-        if name is None:
-            flash('Name is required.')
-            return redirect('/register')
-
-        if len(name) < name_min_length:
-            flash(f'Name should have at least {name_min_length} characters.')
-            return redirect('/register')
-
-        # Query the database to fetch the route number based on the selected source and destination
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT route_number FROM routes WHERE origin = %s AND destination = %s", (source, destination))
-        route = cursor.fetchone()
-        cursor.close()
-
-        if not route:
-            flash('No matching route found for the selected origin and destination.')
-            return redirect('/register')
-
-        route_number = route[0]
+        # Add validation checks for other form fields if necessary
 
         store_driver_registration_data(name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number,
                                        organization, start_date, route_number)
@@ -151,6 +133,7 @@ def register_driver():
         return redirect(url_for('home'))
 
     return render_template('register.html')
+
 
 @app.route('/edit_driver', methods=['GET', 'POST'])
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
@@ -202,6 +185,30 @@ def edit_driver(driver_id=None):
             cursor.close()
 
             return render_template('edit_driver.html', drivers=drivers)
+
+@app.route('/delete_driver', methods=['POST'])
+def delete_driver():
+    if 'username' in session and session['role'] == 'admin':
+        driver_id = request.form.get('driver_id')
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
+        driver = cursor.fetchone()
+        cursor.close()
+
+        if not driver:
+            flash('Invalid driver ID')
+            return redirect(url_for('admin'))
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash('Driver data deleted successfully!')
+        return redirect(url_for('admin'))
+    else:
+        return redirect(url_for('login'))
         
 @app.route('/edit_driver', methods=['POST'])
 def post_edit_driver():
