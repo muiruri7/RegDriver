@@ -178,7 +178,7 @@ def edit_driver(driver_id):
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for('management'))
+        return redirect(url_for('admin'))
 
     return render_template('edit_driver.html', driver=driver)
 
