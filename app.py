@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, flash, session, url
 from flask_mysqldb import MySQL
 from datetime import datetime
 from functools import wraps
+import sqlite3
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 
 app = Flask(__name__)
@@ -277,36 +278,56 @@ def clock_in_out():
 
 @app.route('/schedule_route', methods=['POST'])
 def schedule_route():
-    driver = request.form['driver']
-    route_number = request.form['route_number']
-    origin = request.form['origin']
-    destination = request.form['destination']
-    departure_time = request.form['departure_time']
-    arrival_time = request.form['arrival_time']
+    # Get drivers from database
+    conn = sqlite3.connect('mydatabase.db')
+    c = conn.cursor()
+    c.execute('SELECT id, Name FROM drivers;')
+    drivers = c.fetchall()
+    conn.close()
 
-    # Insert the data into the roster table
-    cursor = mysql.connection.cursor()
-    add_roster_query = ("INSERT INTO roster "
-                        "(name, route_number, origin, destination, departure, arrival) "
-                        "VALUES (%s, %s, %s, %s, %s, %s)")
-    roster_data = (driver, route_number, origin, destination, departure_time, arrival_time)
-    cursor.execute(add_roster_query, roster_data)
-    mysql.connection.commit()
-    cursor.close()
+    if request.method == 'POST':
+        # Get form data
+        driver_id = int(request.form['driver'])
+        route_number = request.form['route_number']
+        pick_up_point = request.form['pick_up_point']
+        destination = request.form['destination']
+        departure_time = request.form['departure_time']
+        arrival_time = request.form['arrival_time']
 
-    flash('Route scheduled successfully!')
-    return redirect(url_for('admin'))
+        # Get driver name from database
+        conn = sqlite3.connect('mydatabase.db')
+        c = conn.cursor()
+        c.execute('SELECT Name FROM drivers WHERE id=?;', (driver_id,))
+        name = c.fetchone()[0]
+        conn.close()
+
+        # Insert data into roster table
+        cursor = mysql.connection.cursor()
+        add_roster_query = ("INSERT INTO roster "
+                            "(name, route_number, pick_up_point, destination, departure_time, arrival_time) "
+                            "VALUES (%s, %s, %s, %s, %s, %s)")
+        roster_data = (name, route_number, pick_up_point, destination, departure_time, arrival_time)
+        cursor.execute(add_roster_query, roster_data)
+        mysql.connection.commit()
+        cursor.close()
+
+        # Redirect to admin page with success message
+        flash('Route scheduled successfully!')
+        return redirect(url_for('admin'))
+
+    # Render management page with drivers list
+    return render_template('management.html', drivers=drivers)
 
 @app.route('/get_route_number', methods=['POST'])
 def get_route_number():
     data = request.get_json()
-    origin = data['origin']
+    pick_up_point = data['origin']
     destination = data['destination']
 
     # Fetch the route number from the database
     cursor = mysql.connection.cursor()
-    get_route_number_query = "SELECT route_number FROM routes WHERE origin=%s AND destination=%s"
-    cursor.execute(get_route_number_query, (origin, destination))
+    get_route_number_query = "SELECT route_number FROM routes WHERE pick_up_point=%s AND destination=%s"
+    cursor.execute(get_route_number_query, (pick_up_point, destination))
     result = cursor.fetchone()
     cursor.close()
 

@@ -191,39 +191,69 @@
         </form>
         <h1>Route Scheduling</h1>
         <form action="{{ url_for('schedule_route') }}" method="POST">
-            <label for="driver">Driver:</label>
-            <select name="driver" id="driver_select">
-                {% for driver in drivers %}
-                    <option value="{{ driver[0] }}">{{ driver[1] }}</option>
-                {% endfor %}
-            </select>
-        
-            <label for="origin">Origin:</label>
-            <select name="origin" id="origin">
-                {% for route in routes %}
-                    <option value="{{ route.origin }}">{{ route.origin }}</option>
-                {% endfor %}
-            </select>
-        
-            <label for="destination">Destination:</label>
-            <select name="destination" id="destination">
-                {% for route in routes %}
-                    <option value="{{ route.destination }}">{{ route.destination }}</option>
-                {% endfor %}
-            </select>
-        
-            <label for="route_number">Route Number:</label>
-            <select name="route_number" id="route_number" disabled>
-                {% for route in routes %}
-                    <option value="{{ route.route_number }}" data-origin="{{ route.origin }}" data-destination="{{ route.destination }}">{{ route.route_number }}</option>
-                {% endfor %}
-            </select>
-        
-            <label for="departure_time">Departure Time:</label>
-            <input type="datetime-local" id="departure_time" name="departure_time" required>
-        
-            <label for="arrival_time">Arrival Time:</label>
-            <input type="datetime-local" id="arrival_time" name="arrival_time" required>
+            <table>
+                <tr>
+                    <td><label for="driver">Driver:</label></td>
+                    <td>
+                        <select name="driver" id="driver_select">
+                            {% for driver in drivers %}
+                                <option value="{{ driver[0] }}">{{ driver[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="pick_up_point">Pick Up Point:</label></td>
+                    <td>
+                        <select name="pick_up_point" id="pick_up_point">
+                            {% for route in routes %}
+                                <option value="{{ route.pick_up_point }}" data-route_number="{{ route.route_number }}" data-destination="{{ route.destination }}">{{ route.pick_up_point }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="destination">Destination:</label></td>
+                    <td>
+                        <select name="destination" id="destination">
+                            {% for route in routes %}
+                                <option value="{{ route.destination }}" data-pick_up_point="{{ route.pick_up_point }}" data-route_number="{{ route.route_number }}">{{ route.destination }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="route_number">Route Number:</label></td>
+                    <td>
+                        <table id="route_numbers_table">
+                            <thead>
+                                <tr>
+                                    <th>Route Number</th>
+                                    <th>Pick Up Point</th>
+                                    <th>Destination</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for route in routes %}
+                                    <tr data-pick_up_point="{{ route.pick_up_point }}" data-destination="{{ route.destination }}">
+                                        <td>{{ route.route_number }}</td>
+                                        <td>{{ route.pick_up_point }}</td>
+                                        <td>{{ route.destination }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="departure_time">Departure Time:</label></td>
+                    <td><input type="datetime-local" id="departure_time" name="departure_time" required></td>
+                </tr>
+                <tr>
+                    <td><label for="arrival_time">Arrival Time:</label></td>
+                    <td><input type="datetime-local" id="arrival_time" name="arrival_time" required></td>
+                </tr>
+            </table>
         
             <input type="submit" value="Submit">
         </form>
@@ -231,17 +261,26 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function(){
-                $('#origin, #destination').change(function(){
-                    var origin = $('#origin').val();
+                $('#pick_up_point, #destination').change(function(){
+                    var pick_up_point = $('#pick_up_point').val();
                     var destination = $('#destination').val();
-                    $('select#route_number option').each(function(){
-                        if ($(this).data('origin') == origin && $(this).data('destination') == destination) {
-                            $('#route_number').val($(this).val());
+                    $('#route_numbers_table tbody tr').each(function(){
+                        if ($(this).data('pick_up_point') == pick_up_point && $(this).data('destination') == destination) {
+                            var route_number = $(this).children('td:first').text();
+                            $('#route_number').val(route_number);
                             return false;
                         }
                     });
                 });
+        
+                $('#driver_select').change(function(){
+                    var driver_id = $(this).val();
+                    $.getJSON('/get_driver_name/' + driver_id, function(data){
+                        var driver_name = data['driver_name'];
+                        $('input#driver_name').val(driver_name);
+                    });
+                });
             });
-        </script>         
+        </script>            
 </body>
 </html>
