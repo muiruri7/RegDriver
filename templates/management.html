@@ -4,86 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Management</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f1f1f1;
-        }
-
-        header {
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-        }
-
-        nav ul {
-            display: flex;
-            justify-content: flex-end;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav li {
-            margin-left: 10px;
-        }
-
-        nav li a {
-            text-decoration: none;
-            color: #333;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        nav li a:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        h1, h2 {
-            text-align: center;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .form-group select, .form-group input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -269,59 +189,59 @@
             </select>
             <button type="submit">Remove</button>
         </form>
-    <h1>Timeline Management</h1>
-    <h3>Clock In/Out</h3>
-    <form action="{{ url_for('clock_in_out') }}" method="POST">
-        <label for="driver">Driver:</label>
-        <select name="driver" id="driver-time">
-            {% for driver in drivers %}
-                <option value="{{ driver[0] }}">{{ driver[1] }}</option>
-            {% endfor %}
-        </select>
-
-            {% for route in routes %}
-                <option value="{{ route[0] }}">{{ route[1] }}</option>
-            {% endfor %}
-        <label for="matatuRoute">Matatu Route:</label>
-        <select id="matatuRoute" name="matatuRoute" required>
-            <option value="1">Route 1: Ngong Road, Citam/N.P.C. valley Road, the Junction Mall, Dagoretti</option>
-            <option value="2">Route 2: Ngong Road, Citam/N.P.C. Valley Road, Junction Mall, Dagoretti</option>
-            <option value="3">Route 3: Ngong Road, Adams Arcade, Dagoretti Corner</option>
-            <option value="4">Route 4: Ngong Road, Adams, Dagorreti</option>
-            <option value="6">Route 6: Eastleigh area, Pangani Girls, Pangani Shopping Center, Kariokor Market</option>
-            <option value="7C">Route 7C: Community, Doctors Plaza Silver Springs Hotel, Kenyatta Nairobi Hospital, Upper Hill area</option>
-            <option value="8">Route 8: Ngong Road, Kibera slums, Adams Arcade, Toi market</option>
-            <option value="9">Route 9: Eastleigh area, Ngara civil servants housing scheme, KIE, Pangani roundabout, Fig Tree Trade Center Ngara</option>
-            <option value="11">Route 11: South B, Bellevue</option>
-            <option value="15">Route 15: Nyayo Stadium, Carnivore Simba Saloon, Nairobi West, Madaraka, T-mall, Wilson Airport, Langata Shopping Center, Langata Cemetery, Barracks, Uhuru Gardens, Otiende, Nairobi Safari Walk, Nairobi National Park, Nairobi Animal Orphanage</option>
-            <option value="14">Route 14: Langata Road to T-Mall, Strathmore University, Nairobi West</option>
-            <option value="17B">Route 17B: Thika Road, Roysambu, Kasarani, Santon, St Francis Hospital, Mwiki, Thika superhighway</option>
-            <option value="23">Route 23: Kangemi, Westlands, Uhuru Highway, Kangemi, A.B.C. Place, Safaricom House, Uhuru highway</option>
-            <option value="24">Route 24: Karen Shopping Center, Hardy, Bogani, Bomas of Kenya, Galleria Shopping Mall, Catholic University, Kenya School of Law, Nairobi Academy, Hillcrest international school, animal protection, Co-Op Bank Training Center, Giraffe Center, Karen C School, all Langata routes</option>
-            <option value="25">Route 25: Baba Ndogo, Thika road to GSU flyover</option>
-            <option value="33">Route 33: Ngumo Estate, KNH, Mbagathi, Masai Market</option>
-            <option value="33">Route 33: Embakasi route, via Jogoo Roads, Donholm, City Stadium, Pipeline, Tumaini Estate, Fedha Estate and Avenue Estate</option>
-            <option value="34">Route 34: Langata area through Mbagathi Road, K.N.H., T-mall, Wilson airport, Carnivore, Langata Shopping Center</option>
-            <option value="34">Route 34 (at times, they also carry those to Mombasa Road): JKIA, Jogoo Road, Embakasi, Fedha, Donholm, Pipeline, Utawala</option>
-            <option value="35/60">Route 35/60: Umoja Inner Core, Umoja 1 and Umoja 2</option>
-            <option value="44">Route 44: Kahawa West, Kamiti Maximum Prison, Zimmerman, Githurai 44 Roysambu, USIU, Farmers Choice, Northern Bypass</option>
-            <option value="45">Route 45: Thika Road, Thika Superhighway, Githurai 45</option>
-            <option value="58">Route 58: Buru Buru</option>
-            <option value="100">Route 100: Kiambu town, Kiambu Road, Sharks Palace, Kiambu Road, CID, Center, Ridgeways, Rock City Kiambu road, Muthaiga roundabout</option>
-            <option value="102">Route 102: Kikuyu Township, Dagoretti, Ngong Road, Junction Mall</option>
-            <option value="105">Route 105: Kikuyu via Uhuru Highway, Westlands, Kangemi, Uthiru, Kinoo</option>
-            <option value="106">Route 106: Banana, Mucatha, Village Market</option>
-            <option value="110">Route 110: Kitengela, Mlolongo, Athi River</option>
-            <option value="111">Route 111: Ngong, Ngong Road, Dagoretti Corner(at times Kiserian)</option>
-            <option value="125/126">Route 125 or 126: Catholic University, Multimedia University, Nairobi National Park, Safari Walk, Langata Barracks, Galleria, Brookhouse International Schools, Langata Hospital, Langata Police Station, Langata Cemetery, Kiserian, Ongata Rongai</option>
-            <option value="146">Route 146: Ruiru, Thika Road, Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University, Ruiru bypass</option>
-            <option value="237">Route 237: Thika town all routes on Thika Road, Kahawa ,Ruiru</option>
-        </select>
-        <label for="departure_time">Departure Time:</label>
-        <input type="datetime-local" id="departure_time" name="departure_time">
-        <label for="arrival_time">Arrival Time:</label>
-        <input type="datetime-local" id="arrival_time" name="arrival_time">
-        <input type="submit" value="Submit">
-    </form> 
+        <h1>Route Scheduling</h1>
+        <form action="{{ url_for('schedule_route') }}" method="POST">
+            <label for="driver">Driver:</label>
+            <select name="driver" id="driver_select">
+                {% for driver in drivers %}
+                    <option value="{{ driver[0] }}">{{ driver[1] }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="origin">Origin:</label>
+            <select name="origin" id="origin">
+                {% for route in routes %}
+                    <option value="{{ route.origin }}">{{ route.origin }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="destination">Destination:</label>
+            <select name="destination" id="destination">
+                {% for route in routes %}
+                    <option value="{{ route.destination }}">{{ route.destination }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="route_number">Route Number:</label>
+            <select name="route_number" id="route_number" disabled>
+                {% for route in routes %}
+                    <option value="{{ route.route_number }}" data-origin="{{ route.origin }}" data-destination="{{ route.destination }}">{{ route.route_number }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="departure_time">Departure Time:</label>
+            <input type="datetime-local" id="departure_time" name="departure_time" required>
+        
+            <label for="arrival_time">Arrival Time:</label>
+            <input type="datetime-local" id="arrival_time" name="arrival_time" required>
+        
+            <input type="submit" value="Submit">
+        </form>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('#origin, #destination').change(function(){
+                    var origin = $('#origin').val();
+                    var destination = $('#destination').val();
+                    $('select#route_number option').each(function(){
+                        if ($(this).data('origin') == origin && $(this).data('destination') == destination) {
+                            $('#route_number').val($(this).val());
+                            return false;
+                        }
+                    });
+                });
+            });
+        </script>         
 </body>
 </html>

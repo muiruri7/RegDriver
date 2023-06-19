@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, session, url_for
+from flask import Flask, render_template, request, redirect, flash, session, url_for, jsonify
 from flask_mysqldb import MySQL
 from datetime import datetime
 from functools import wraps
@@ -275,6 +275,48 @@ def clock_in_out():
 
     return redirect(url_for('admin'))
 
+@app.route('/schedule_route', methods=['POST'])
+def schedule_route():
+    driver = request.form['driver']
+    route_number = request.form['route_number']
+    origin = request.form['origin']
+    destination = request.form['destination']
+    departure_time = request.form['departure_time']
+    arrival_time = request.form['arrival_time']
+
+    # Insert the data into the roster table
+    cursor = mysql.connection.cursor()
+    add_roster_query = ("INSERT INTO roster "
+                        "(name, route_number, origin, destination, departure, arrival) "
+                        "VALUES (%s, %s, %s, %s, %s, %s)")
+    roster_data = (driver, route_number, origin, destination, departure_time, arrival_time)
+    cursor.execute(add_roster_query, roster_data)
+    mysql.connection.commit()
+    cursor.close()
+
+    flash('Route scheduled successfully!')
+    return redirect(url_for('admin'))
+
+@app.route('/get_route_number', methods=['POST'])
+def get_route_number():
+    data = request.get_json()
+    origin = data['origin']
+    destination = data['destination']
+
+    # Fetch the route number from the database
+    cursor = mysql.connection.cursor()
+    get_route_number_query = "SELECT route_number FROM routes WHERE origin=%s AND destination=%s"
+    cursor.execute(get_route_number_query, (origin, destination))
+    result = cursor.fetchone()
+    cursor.close()
+
+    if result is not None:
+        route_number = result[0]
+    else:
+        route_number = ""
+
+    response = {'route_number': route_number}
+    return jsonify(response)
 
 @app.route('/assign_route', methods=['POST'])
 def assign_route():
