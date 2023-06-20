@@ -240,8 +240,9 @@
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                     <!-- Edit Button -->
-                    <form action="{{ url_for('edit_driver', driver_id=driver[11]) }}" method="GET" onsubmit="return confirm('Are you sure you want to edit this driver?');">
-                        <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                    <input type="hidden" name="driver_id" value="{{ driver[-1] }}">
+                    <form action="{{ url_for('edit_driver', driver_id=driver[-1]) }}" method="GET" onsubmit="return confirm('Are you sure you want to edit this driver?');">
+                      <button type="submit" class="btn btn-primary">Edit</button>
                     </form>
                 </td>
             </tr>

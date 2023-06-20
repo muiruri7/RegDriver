@@ -167,7 +167,7 @@
     </header>
     <h2>Edit Driver</h2>
     {% if driver %}
-        <form method="POST" action="{{ url_for('edit_driver', driver_id=driver[11]) }}">
+        <form method="POST" action="{{ url_for('edit_driver', driver_id=driver[-1]) }}">
             <label>Name:</label>
             <input type="text" name="name" value="{{ driver[0] }}"><br>
             <label>Gender:</label>
