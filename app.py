@@ -133,9 +133,9 @@ def register_driver():
         license = request.form.get('license')
         vehicle_type = request.form.get('vehicle_type')
         vehicle_model = request.form.get('vehicle_model')
-        vehicle_classification = request.form.get('vehicle_classification')
         license_plate_number = request.form.get('license_plate_number')
-        organization = request.form.get('organization')
+        organization = None
+        vehicle_classification = None
         start_date = request.form.get('start_date')
 
         # Add validation checks for other form fields if necessary
@@ -164,35 +164,44 @@ def register_driver():
         if result1:
             organization = "super_metro"
             vehicle_classification = result1[1]
-            route_number = result1[2]
         elif result2:
             organization = "lopha_travellers"
             vehicle_classification = result2[1]
-            route_number = result2[2]
         elif result3:
             organization = "2nk_sacco"
             vehicle_classification = result3[1]
-            route_number = result3[2]
         elif result4:
             organization = "manchester_travellers"
             vehicle_classification = result4[1]
-            route_number = result4[2]
         elif result5:
             organization = "neo_kenya_mpya_sacco"
             vehicle_classification = result5[1]
-            route_number = result5[2]
         elif result6:
             organization = "4nte_sacco"
             vehicle_classification = result6[1]
-            route_number = result6[2]
         elif result7:
             organization = "naekana_sacco"
             vehicle_classification = result7[1]
-            route_number = result7[2]
         else:
             # If no results were found, display an alert
-            flash('license plate number not found')
+            flash('License plate number not found')
             return redirect(url_for('home'))
+
+        # Assign route_number based on the organization where the license plate number was found
+        if organization == 'super_metro':
+            route_number = result1[2]
+        elif organization == 'lopha_travellers':
+            route_number = result2[2]
+        elif organization == '2nk_sacco':
+            route_number = result3[2]
+        elif organization == 'manchester_travellers':
+            route_number = result4[2]
+        elif organization == 'neo_kenya_mpya_sacco':
+            route_number = result5[2]
+        elif organization == '4nte_sacco':
+            route_number = result6[2]
+        elif organization == 'naekana_sacco':
+            route_number = result7[2]
 
         # Store driver registration data in the database
         cursor.execute(
@@ -212,6 +221,13 @@ def register_driver():
         license_plate_number = request.args.get("license_plate_number")
         return render_template('register.html', license_plate_number=license_plate_number)
 
+@app.route('/getdata')
+def getdata():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM drivers")
+    data = cur.fetchall()
+    cur.close()
+    return jsonify(data)
 
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
 def edit_driver(driver_id):

@@ -200,8 +200,8 @@
                 <input type="date" id="start_date" name="start_date" required>
             </div>
             <div class="form-group">
-                <label for="license-plate-number">License Plate Number</label>
-                <input type="text" id="licenseplate-number" name="license_plate_number" required>
+                <label for="licenseplate-number">License Plate Number</label>
+                <input type="text" id="licenseplate-number" name="license_plate_number" required>                
             </div>
             <div>
                 <label for="organization">Organization:</label>
@@ -221,13 +221,23 @@
         </form>
     </div>
     <script>
-        // assume that `data` is the object containing the fetched data
-        if (data) {
-            document.getElementById("organization").value = data.organization || "";
-            document.getElementById("vehicle_classification").value = data.vehicle_classification || "";
-            document.getElementById("route-number").value = data.route_number || "";
-        }
+        // Add an event listener to the license plate number input field
+        const licensePlateNumberField = document.getElementById("licenseplate-number");
+        licensePlateNumberField.addEventListener("blur", () => {
+            const licensePlateNumber = licensePlateNumberField.value;
+    
+            // Send a GET request to your Flask route to get the data for the matching license plate number
+            fetch(`/getdata?license_plate_number=${licensePlateNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Set the values of the organization, vehicle classification, and route number fields
+                    document.getElementById("organization").value = data.organization || "";
+                    document.getElementById("vehicle_classification").value = data.vehicle_classification || "";
+                    document.getElementById("route-number").value = data.route_number || "";
+                });
+        });
     </script>
+    
         
 </body>
 </html>
