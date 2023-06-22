@@ -137,10 +137,12 @@ def register_driver():
         license_plate_number = request.form.get('license_plate_number')
         organization = request.form.get('organization')
         start_date = request.form.get('start_date')
-        route_number = request.form.get('route_number')
 
         # Add validation checks for other form fields if necessary
-
+        if not license_plate_number:
+            flash('License plate number is required.')
+            return redirect(url_for('home'))
+        
         cursor = mysql.connection.cursor()
 
         # Searching for the license plate number in each of the tables

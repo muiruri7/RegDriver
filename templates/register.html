@@ -211,10 +211,10 @@
                 <label for="vehicle_classification">Vehicle Classification:</label>
                 <input type="text" id="vehicle_classification" name="vehicle_classification" placeholder="Enter vehicle classification">
             </div>
-              <div>
+            <div>
                 <label for="route-number">Route Number:</label>
-                <input type="text" id="route-number" name="route-number" placeholder="Enter route number">
-              </div>              
+                <input type="text" id="route-number" name="route_number" placeholder="Enter route number">
+            </div>                        
             <div class="form-group">
                 <button type="submit">Submit</button>
             </div>
@@ -222,9 +222,12 @@
     </div>
     <script>
         // assume that `data` is the object containing the fetched data
-        document.getElementById("organization").value = data.organization;
-        document.getElementById("vehicle-classification").value = vehicle.classification;
-        document.getElementById("route-number").value = data.routeNumber;
+        if (data) {
+            document.getElementById("organization").value = data.organization || "";
+            document.getElementById("vehicle_classification").value = data.vehicle_classification || "";
+            document.getElementById("route-number").value = data.route_number || "";
+        }
     </script>
+        
 </body>
 </html>
