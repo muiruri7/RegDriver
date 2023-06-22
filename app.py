@@ -142,7 +142,6 @@ def register_driver():
         if not license_plate_number:
             flash('License plate number is required.')
             return redirect(url_for('home'))
-        
         cursor = mysql.connection.cursor()
 
         # Searching for the license plate number in each of the tables
