@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 from datetime import datetime
 from functools import wraps
 import sqlite3
+import mysql.connector
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 
 app = Flask(__name__)
@@ -140,13 +141,76 @@ def register_driver():
 
         # Add validation checks for other form fields if necessary
 
-        store_driver_registration_data(name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number,
-                                       organization, start_date, route_number)
+        cursor = mysql.connection.cursor()
+
+        # Searching for the license plate number in each of the tables
+        cursor.execute("SELECT * FROM super_metro WHERE license_plate_number=%s", (license_plate_number,))
+        result1 = cursor.fetchone()
+        cursor.execute("SELECT * FROM lopha_travellers WHERE license_plate_number=%s", (license_plate_number,))
+        result2 = cursor.fetchone()
+        cursor.execute("SELECT * FROM 2nk_sacco WHERE license_plate_number=%s", (license_plate_number,))
+        result3 = cursor.fetchone()
+        cursor.execute("SELECT * FROM manchester_travellers WHERE license_plate_number=%s", (license_plate_number,))
+        result4 = cursor.fetchone()
+        cursor.execute("SELECT * FROM neo_kenya_mpya_sacco WHERE license_plate_number=%s", (license_plate_number,))
+        result5 = cursor.fetchone()
+        cursor.execute("SELECT * FROM 4nte_sacco WHERE license_plate_number=%s", (license_plate_number,))
+        result6 = cursor.fetchone()
+        cursor.execute("SELECT * FROM naekana_sacco WHERE license_plate_number=%s", (license_plate_number,))
+        result7 = cursor.fetchone()
+
+        # Checking if any of the searches returned a result
+        if result1:
+            organization = "super_metro"
+            vehicle_classification = result1[1]
+            route_number = result1[2]
+        elif result2:
+            organization = "lopha_travellers"
+            vehicle_classification = result2[1]
+            route_number = result2[2]
+        elif result3:
+            organization = "2nk_sacco"
+            vehicle_classification = result3[1]
+            route_number = result3[2]
+        elif result4:
+            organization = "manchester_travellers"
+            vehicle_classification = result4[1]
+            route_number = result4[2]
+        elif result5:
+            organization = "neo_kenya_mpya_sacco"
+            vehicle_classification = result5[1]
+            route_number = result5[2]
+        elif result6:
+            organization = "4nte_sacco"
+            vehicle_classification = result6[1]
+            route_number = result6[2]
+        elif result7:
+            organization = "naekana_sacco"
+            vehicle_classification = result7[1]
+            route_number = result7[2]
+        else:
+            # If no results were found, display an alert
+            flash('license plate number not found')
+            return redirect(url_for('home'))
+
+        # Store driver registration data in the database
+        cursor.execute(
+            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, "
+            "license_plate_number, organization, start_date, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, "
+            "%s, %s)", (
+                name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number,
+                organization, start_date, route_number))
+
+        mysql.connection.commit()
+        cursor.close()
 
         flash('Registration Successful!')
         return redirect(url_for('home'))
 
-    return render_template('register.html')
+    else:  # GET request
+        license_plate_number = request.args.get("license_plate_number")
+        return render_template('register.html', license_plate_number=license_plate_number)
+
 
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
 def edit_driver(driver_id):

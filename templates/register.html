@@ -196,77 +196,35 @@
                 <input type="text" id="vehicle_model" name="vehicle_model" required>
             </div>
             <div class="form-group">
-                <label for="vehicle_classification">Vehicle Classification:</label>
-                <select id="vehicle_classification" name="vehicle_classification" required>
-                    <option value="matatu">Matatu</option>
-                    <option value="bus">Bus</option>
-                </select>
+                <label for="start_date">Date Started with Organization:</label>
+                <input type="date" id="start_date" name="start_date" required>
             </div>
             <div class="form-group">
                 <label for="license-plate-number">License Plate Number</label>
                 <input type="text" id="licenseplate-number" name="license_plate_number" required>
             </div>
-            <div class="form-group">
+            <div>
                 <label for="organization">Organization:</label>
-                <select id="organization" name="organization" required>
-                    <option value="Super Metro">Super Metro</option>
-                    <option value="Lopha Travellers">Lopha Travellers</option>
-                    <option value="2NK SACCO">2NK SACCO</option>
-                    <option value="Manchester Travellers">Manchester Travellers</option>
-                    <option value="Neo Kenya Mpya SACCO">Neo Kenya Mpya SACCO</option>
-                    <option value="4NTE SACCO">4NTE SACCO</option>
-                    <option value="Naekana SACCO">Naekana SACCO</option>
-                </select>
-            </div>
+                <input type="text" id="organization" name="organization" placeholder="Enter organization">
+              </div>
             <div class="form-group">
-                <label for="start_date">Date Started with Organization:</label>
-                <input type="date" id="start_date" name="start_date" required>
+                <label for="vehicle_classification">Vehicle Classification:</label>
+                <input type="text" id="vehicle_classification" name="vehicle_classification" placeholder="Enter vehicle classification">
             </div>
-            <div class="form-group">
-                <label for="matatuRoute">Matatu Route:</label>
-                <select id="matatuRoute" name="matatuRoute" required>
-                    <option value="1">Route 1: Ngong Road, Citam/N.P.C. valley Road, the Junction Mall, Dagoretti</option>
-                    <option value="2">Route 2: Ngong Road, Citam/N.P.C. Valley Road, Junction Mall, Dagoretti</option>
-                    <option value="3">Route 3: Ngong Road, Adams Arcade, Dagoretti Corner</option>
-                    <option value="4">Route 4: Ngong Road, Adams, Dagorreti</option>
-                    <option value="6">Route 6: Eastleigh area, Pangani Girls, Pangani Shopping Center, Kariokor Market</option>
-                    <option value="7C">Route 7C: Community, Doctors Plaza Silver Springs Hotel, Kenyatta Nairobi Hospital, Upper Hill area</option>
-                    <option value="8">Route 8: Ngong Road, Kibera slums, Adams Arcade, Toi market</option>
-                    <option value="9">Route 9: Eastleigh area, Ngara civil servants housing scheme, KIE, Pangani roundabout, Fig Tree Trade Center Ngara</option>
-                    <option value="11">Route 11: South B, Bellevue</option>
-                    <option value="15">Route 15: Nyayo Stadium, Carnivore Simba Saloon, Nairobi West, Madaraka, T-mall, Wilson Airport, Langata Shopping Center, Langata Cemetery, Barracks, Uhuru Gardens, Otiende, Nairobi Safari Walk, Nairobi National Park, Nairobi Animal Orphanage</option>
-                    <option value="14">Route 14: Langata Road to T-Mall, Strathmore University, Nairobi West</option>
-                    <option value="17B">Route 17B: Thika Road, Roysambu, Kasarani, Santon, St Francis Hospital, Mwiki, Thika superhighway</option>
-                    <option value="23">Route 23: Kangemi, Westlands, Uhuru Highway, Kangemi, A.B.C. Place, Safaricom House, Uhuru highway</option>
-                    <option value="24">Route 24: Karen Shopping Center, Hardy, Bogani, Bomas of Kenya, Galleria Shopping Mall, Catholic University, Kenya School of Law, Nairobi Academy, Hillcrest international school, animal protection, Co-Op Bank Training Center, Giraffe Center, Karen C School, all Langata routes</option>
-                    <option value="25">Route 25: Baba Ndogo, Thika road to GSU flyover</option>
-                    <option value="33">Route 33: Ngumo Estate, KNH, Mbagathi, Masai Market</option>
-                    <option value="33">Route 33: Embakasi route, via Jogoo Roads, Donholm, City Stadium, Pipeline, Tumaini Estate, Fedha Estate and Avenue Estate</option>
-                    <option value="34">Route 34: Langata area through Mbagathi Road, K.N.H., T-mall, Wilson airport, Carnivore, Langata Shopping Center</option>
-                    <option value="34">Route 34 (at times, they also carry those to Mombasa Road): JKIA, Jogoo Road, Embakasi, Fedha, Donholm, Pipeline, Utawala</option>
-                    <option value="35/60">Route 35/60: Umoja Inner Core, Umoja 1 and Umoja 2</option>
-                    <option value="44">Route 44: Kahawa West, Kamiti Maximum Prison, Zimmerman, Githurai 44 Roysambu, USIU, Farmers Choice, Northern Bypass</option>
-                    <option value="45">Route 45: Thika Road, Thika Superhighway, Githurai 45</option>
-                    <option value="58">Route 58: Buru Buru</option>
-                    <option value="100">Route 100: Kiambu town, Kiambu Road, Sharks Palace, Kiambu Road, CID, Center, Ridgeways, Rock City Kiambu road, Muthaiga roundabout</option>
-                    <option value="102">Route 102: Kikuyu Township, Dagoretti, Ngong Road, Junction Mall</option>
-                    <option value="105">Route 105: Kikuyu via Uhuru Highway, Westlands, Kangemi, Uthiru, Kinoo</option>
-                    <option value="106">Route 106: Banana, Mucatha, Village Market</option>
-                    <option value="110">Route 110: Kitengela, Mlolongo, Athi River</option>
-                    <option value="111">Route 111: Ngong, Ngong Road, Dagoretti Corner(at times Kiserian)</option>
-                    <option value="125/126">Route 125 or 126: Catholic University, Multimedia University, Nairobi National Park, Safari Walk, Langata Barracks, Galleria, Brookhouse International Schools, Langata Hospital, Langata Police Station, Langata Cemetery, Kiserian, Ongata Rongai</option>
-                    <option value="146">Route 146: Ruiru, Thika Road, Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University, Ruiru bypass</option>
-                    <option value="237">Route 237: Thika town all routes on Thika Road, Kahawa ,Ruiru</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="route_number">Route Number:</label>
-                <input type="text" id="route_number" name="route_number" required>
-            </div>
+              <div>
+                <label for="route-number">Route Number:</label>
+                <input type="text" id="route-number" name="route-number" placeholder="Enter route number">
+              </div>              
             <div class="form-group">
                 <button type="submit">Submit</button>
             </div>
         </form>
     </div>
+    <script>
+        // assume that `data` is the object containing the fetched data
+        document.getElementById("organization").value = data.organization;
+        document.getElementById("vehicle-classification").value = vehicle.classification;
+        document.getElementById("route-number").value = data.routeNumber;
+    </script>
 </body>
 </html>
