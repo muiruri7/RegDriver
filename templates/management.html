@@ -1,286 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driver Management</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/register">Register Driver</a></li>
-                <li><a href="/admin">Driver Details</a></li>
-                <li><a href="/management">Driver Management</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>Routes Management</h1>
-    <h2>Assign Route</h2>
-        <form action="{{ url_for('assign_route') }}" method="POST">
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Driver Management</h1>
+    <hr/>
+
+    {% if drivers %}
+        <h2>Drivers List</h2>
+        <ul>
+            {% for driver in drivers %}
+                <li>{{ driver[1] }}<a href="{{ url_for('assign_route') }}" class="btn btn-primary ml-3">Assign Route</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No drivers found.</p>
+    {% endif %}
+
+    <hr />
+
+    <h2>Schedule a Route</h2>
+    <form method="POST" action="{{ url_for('schedule_route') }}">
+        <div class="form-group">
             <label for="driver">Driver:</label>
-            <select name="driver" id="driver">
+            <select name="driver" id="driver" class="form-control">
                 {% for driver in drivers %}
                     <option value="{{ driver[0] }}">{{ driver[1] }}</option>
                 {% endfor %}
             </select>
-            <label for="route">Route:</label>
-            <select name="route" id="route">
-                <option value="1">Matatu route number 1</option>
-                <option value="2">Matatu route number 2</option>
-                <option value="3">Matatu route number 3</option>
-                <option value="4">Matatu route number 4</option>
-                <option value="6">Matatu route number 6</option>
-                <option value="7C">Matatu route number 7C</option>
-                <option value="8">Matatu route number 8</option>
-                <option value="9">Matatu route number 9</option>
-                <option value="11">Matatu route number 11</option>
-                <option value="15">Matatu route number 15</option>
-                <option value="14">Matatu route number 14</option>
-                <option value="17B">Matatu route number 17B</option>
-                <option value="23">Matatu route number 23</option>
-                <option value="24">Matatu route number 24</option>
-                <option value="25">Matatu route number 25</option>
-                <option value="33">Matatu route number 33</option>
-                <option value="34">Matatu route number 34</option>
-                <option value="35/60">Matatu routes number 35/60</option>
-                <option value="44">Matatu route number 44</option>
-                <option value="45">Matatu route number 45</option>
-                <option value="58">Matatu route number 58</option>
-                <option value="100">Matatu route number 100</option>
-                <option value="102">Matatu route number 102</option>
-                <option value="105">Matatu route number 105</option>
-                <option value="106">Route number 106</option>
-                <option value="110">Matatu route number 110</option>
-                <option value="111">Matatu route number 111</option>
-                <option value="125/126">Route 125 or 126</option>
-                <option value="146">Matatu route number 146</option>
-                <option value="237">Matatu route number 237</option>
-            </select>
-                {% for route in routes %}
-                    <option value="{{ route[0] }}">{{ route[1] }}</option>
-                {% endfor %}
-            <label for="bus_stop">Bus Stop:</label>
-            <select name="bus_stop" id="bus_stop">
-                <option value="Ngong Road, Citam/N.P.C. Valley Road, the Junction Mall, Dagoretti">Ngong Road, Citam/N.P.C. Valley Road, the Junction Mall, Dagoretti</option>
-                <option value="Ngong Road, Citam/N.P.C. Valley Road, Junction Mall, Dagoretti">Ngong Road, Citam/N.P.C. Valley Road, Junction Mall, Dagoretti</option>
-                <option value="Ngong Road, Adams Arcade, Dagoretti Corner">Ngong Road, Adams Arcade, Dagoretti Corner</option>
-                <option value="Ngong Road, Adams, Dagorreti">Ngong Road, Adams, Dagorreti</option>
-                <option value="Eastleigh area, Pangani Girls, Pangani Shopping Center, Kariokor Market">Eastleigh area, Pangani Girls, Pangani Shopping Center, Kariokor Market</option>
-                <option value="Community, Doctors Plaza Silver Springs Hotel, Kenyatta Nairobi Hospital, Upper Hill area">Community, Doctors Plaza Silver Springs Hotel, Kenyatta Nairobi Hospital, Upper Hill area</option>
-                <option value="Ngong Road, Kibera slums, Adams Arcade, Toi market">Ngong Road, Kibera slums, Adams Arcade, Toi market</option>
-                <option value="Eastleigh area, Ngara civil servants housing scheme, KIE, Pangani roundabout, Fig Tree Trade Center Ngara">Eastleigh area, Ngara civil servants housing scheme, KIE, Pangani roundabout, Fig Tree Trade Center Ngara</option>
-                <option value="South B, Bellevue">South B, Bellevue</option>
-                <option value="Nyayo Stadium, Carnivore Simba Saloon, Nairobi West, Madaraka, T-mall, Wilson Airport, Langata Shopping Center, Langata Cemetery, Barracks, Uhuru Gardens, Otiende, Nairobi Safari Walk, Nairobi National Park, Nairobi Animal Orphanage">Nyayo Stadium, Carnivore Simba Saloon, Nairobi West, Madaraka, T-mall, Wilson Airport, Langata Shopping Center, Langata Cemetery, Barracks, Uhuru Gardens, Otiende, Nairobi Safari Walk, Nairobi National Park, Nairobi Animal Orphanage</option>
-                <option value="Langata Road to T-Mall, Strathmore University, Nairobi West">Langata Road to T-Mall, Strathmore University, Nairobi West</option>
-                <option value="Thika Road, Roysambu, Kasarani, Santon, St Francis Hospital, Mwiki, Thika superhighway">Thika Road, Roysambu, Kasarani, Santon, St Francis Hospital, Mwiki, Thika superhighway</option>
-                <option value="Kangemi, Westlands, Uhuru Highway, Kangemi, A.B.C. Place, Safaricom House, Uhuru highway">Kangemi, Westlands, Uhuru Highway, Kangemi, A.B.C. Place, Safaricom House, Uhuru highway</option>
-                <option value="Karen Shopping Center, Hardy, Bogani, Bomas of Kenya, Galleria Shopping Mall, Catholic University, Kenya School of Law, Nairobi Academy, Hillcrest international school, animal protection, Co-Op Bank Training Center, Giraffe Center, Karen C School, all Langata routes">Karen Shopping Center, Hardy, Bogani, Bomas of Kenya, Galleria Shopping Mall, Catholic University, Kenya School of Law, Nairobi Academy, Hillcrest international school, animal protection, Co-Op Bank Training Center, Giraffe Center, Karen C School, all Langata routes</option>
-                <option value="Baba Ndogo, Thika road to GSU flyover">Baba Ndogo, Thika road to GSU flyover</option>
-                <option value="Ngumo Estate, KNH, Mbagathi, Masai Market">Ngumo Estate, KNH, Mbagathi, Masai Market</option>
-                <option value="Embakasi route, via Jogoo Roads, Donholm, City Stadium, Pipeline, Tumaini Estate, Fedha Estate and Avenue Estate">Embakasi route, via Jogoo Roads, Donholm, City Stadium, Pipeline, Tumaini Estate, Fedha Estate and Avenue Estate</option>
-                <option value="Langata area through Mbagathi Road, K.N.H., T-mall, Wilson airport, Carnivore, Langata Shopping Center">Langata area through Mbagathi Road, K.N.H., T-mall, Wilson airport, Carnivore, Langata Shopping Center</option>
-                <option value="JKIA, Jogoo Road, Embakasi, Fedha, Donholm, Pipeline, Utawala">JKIA, Jogoo Road, Embakasi, Fedha, Donholm, Pipeline, Utawala</option>
-                <option value="Umoja Inner Core, Umoja 1 and Umoja 2">Umoja Inner Core, Umoja 1 and Umoja 2</option>
-                <option value="Kahawa West, Kamiti Maximum Prison, Zimmerman, Githurai 44 Roysambu, USIU, Farmers Choice, Northern Bypass">Kahawa West, Kamiti Maximum Prison, Zimmerman, Githurai 44 Roysambu, USIU, Farmers Choice, Northern Bypass</option>
-                <option value="Thika Road, Thika Superhighway, Githurai 45">Thika Road, Thika Superhighway, Githurai 45</option>
-                <option value="Buru Buru">Buru Buru</option>
-                <option value="Kiambu town, Kiambu Road, Sharks Palace, Kiambu Road, CID, Center, Ridgeways, Rock City Kiambu road, Muthaiga roundabout">Kiambu town, Kiambu Road, Sharks Palace, Kiambu Road, CID, Center, Ridgeways, Rock City Kiambu road, Muthaiga roundabout</option>
-                <option value="Kikuyu Township, Dagoretti, Ngong Road, Junction Mall">Kikuyu Township, Dagoretti, Ngong Road, Junction Mall</option>
-                <option value="Kikuyu via Uhuru Highway, Westlands, Kangemi, Uthiru, Kinoo">Kikuyu via Uhuru Highway, Westlands, Kangemi, Uthiru, Kinoo</option>
-                <option value="Banana, Mucatha, Village Market">Banana, Mucatha, Village Market</option>
-                <option value="Kitengela, Mlolongo, Athi River">Kitengela, Mlolongo, Athi River</option>
-                <option value="Ngong, Ngong Road, Dagoretti Corner(at times Kiserian)">Ngong, Ngong Road, Dagoretti Corner(at times Kiserian)</option>
-                <option value="Catholic University, Multimedia University, Nairobi National Park, Safari Walk, Langata Barracks, Galleria, Brookhouse International Schools, Langata Hospital, Langata Police Station, Langata Cemetery, Kiserian, Ongata Rongai">Catholic University, Multimedia University, Nairobi National Park, Safari Walk, Langata Barracks, Galleria, Brookhouse International Schools, Langata Hospital, Langata Police Station, Langata Cemetery, Kiserian, Ongata Rongai</option>
-                <option value="Ruiru, Thika Road, Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University, Ruiru bypass">Ruiru, Thika Road, Kahawa Wendani, Kahawa Barracks, Kahawa Sukari, Kenyatta University, Ruiru bypass</option>
-                <option value="Thika town all routes on Thika Road, Kahawa ,Ruiru">Thika town all routes on Thika Road, Kahawa ,Ruiru</option>
-            </select>
-            <label for="stage">Stage:</label>
-            <select name="stage" id="stage">
-                <option value="General Post Office (GPO)">General Post Office (GPO)</option>
-                <option value="GPO or KBS stage">GPO or KBS stage</option>
-                <option value="GPO">GPO</option>
-                <option value="Kencom or G.P.O.">Kencom or G.P.O.</option>
-                <option value="Pick a matatu from Accra Road, along Tom Mboya Street">Pick a matatu from Accra Road, along Tom Mboya Street</option>
-                <option value="Citi Hoppa or KBS buses at Kencom, adjacent to Hilton Hotel along Moi Avenue">Citi Hoppa or KBS buses at Kencom, adjacent to Hilton Hotel along Moi Avenue</option>
-                <option value="Railways bus station">Railways bus station</option>
-                <option value="Board matatu at Tom Mboya Street or the entrance of Accra Road">Board matatu at Tom Mboya Street or the entrance of Accra Road</option>
-                <option value="Railways bus station">Railways bus station</option>
-                <option value="Board a matatu at the Afya Centre or near the main stage opposite Afya Center">Board a matatu at the Afya Centre or near the main stage opposite Afya Center</option>
-                <option value="Board a matatu at the bus station behind Afya Centre">Board a matatu at the bus station behind Afya Centre</option>
-                <option value="Pick a matatu from Kenya Bus Station or outside BS near the St Peter Claviers Catholic Church">Pick a matatu from Kenya Bus Station or outside BS near the St Peter Claviers Catholic Church</option>
-                <option value="Board the Matatu at the bus stop near Odeon Cinema along Accra Road">Board the Matatu at the bus stop near Odeon Cinema along Accra Road</option>
-                <option value="Catch a Citi Hoppa or KBS matatu at the Kencom Bus Stop, near Hilton Hotel">Catch a Citi Hoppa or KBS matatu at the Kencom Bus Stop, near Hilton Hotel</option>
-                <option value="Board the matatu at Kencom near Odeon Cinema, along Ronald Ngala Street">Board the matatu at Kencom near Odeon Cinema, along Ronald Ngala Street</option>
-                <option value="Pick the matatu at the bus stop near Odeon Cinema along Accra Road">Pick the matatu at the bus stop near Odeon Cinema along Accra Road</option>
-                <option value="Board the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick the matatu at the bus stop near Odeon Cinema along Accra Road">Pick the matatu at the bus stop near Odeon Cinema along Accra Road</option>
-                <option value="Pick a matatu at the Kencom Bus Stop, opposite Nation Center">Pick a matatu at the Kencom Bus Stop, opposite Nation Center</option>
-                <option value="Catch a matatu at the Kencom Bus Stop, near Hilton Hotel">Catch a matatu at the Kencom Bus Stop, near Hilton Hotel</option>
-                <option value="Pick a matatu at the Kencom Bus Stop, near Hilton Hotel">Pick a matatu at the Kencom Bus Stop, near Hilton Hotel</option>
-                <option value="Board a matatu at Kencom, opposite Nation Center">Board a matatu at Kencom, opposite Nation Center</option>
-                <option value="Pick a matatu at the Kencom bus stop, opposite Nation Center">Pick a matatu at the Kencom bus stop, opposite Nation Center</option>
-                <option value="Pick a matatu at the bus stop outside Kenya National Archives">Pick a matatu at the bus stop outside Kenya National Archives</option>
-                <option value="Board a matatu at the bus stop opposite the Kencom House, along Moi Avenue">Board a matatu at the bus stop opposite the Kencom House, along Moi Avenue</option>
-                <option value="Pick a matatu at the Kencom Bus Stop, near Hilton Hotel">Pick a matatu at the Kencom Bus Stop, near Hilton Hotel</option>
-                <option value="Pick a matatu at the Kencom Bus Stop, near Hilton Hotel">Pick a matatu at the Kencom Bus Stop, near Hilton Hotel</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Catch a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick the matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Board a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-                <option value="Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue">Pick a matatu at the bus stop near the Hilton Hotel along Moi Avenue</option>
-            </select>
-            <button type="submit">Submit</button>    
-        </form>
-        <h2>Remove Route</h2>
-        <form action="{{ url_for('remove_route') }}" method="POST">
-            <label for="route">Route:</label>
-            <select name="route" id="remove-route">
-                <option value="1">Matatu route number 1</option>
-                <option value="2">Matatu route number 2</option>
-                <option value="3">Matatu route number 3</option>
-                <option value="4">Matatu route number 4</option>
-                <option value="6">Matatu route number 6</option>
-                <option value="7C">Matatu route number 7C</option>
-                <option value="8">Matatu route number 8</option>
-                <option value="9">Matatu route number 9</option>
-                <option value="11">Matatu route number 11</option>
-                <option value="15">Matatu route number 15</option>
-                <option value="14">Matatu route number 14</option>
-                <option value="17B">Matatu route number 17B</option>
-                <option value="23">Matatu route number 23</option>
-                <option value="24">Matatu route number 24</option>
-                <option value="25">Matatu route number 25</option>
-                <option value="33">Matatu route number 33</option>
-                <option value="34">Matatu route number 34</option>
-                <option value="35/60">Matatu routes number 35/60</option>
-                <option value="44">Matatu route number 44</option>
-                <option value="45">Matatu route number 45</option>
-                <option value="58">Matatu route number 58</option>
-                <option value="100">Matatu route number 100</option>
-                <option value="102">Matatu route number 102</option>
-                <option value="105">Matatu route number 105</option>
-                <option value="106">Route number 106</option>
-                <option value="110">Matatu route number 110</option>
-                <option value="111">Matatu route number 111</option>
-                <option value="125/126">Route 125 or 126</option>
-                <option value="146">Matatu route number 146</option>
-                <option value="237">Matatu route number 237</option>
-            </select>
-            <button type="submit">Remove</button>
-        </form>
-        <h1>Route Scheduling</h1>
-        <form action="{{ url_for('schedule_route') }}" method="POST">
-            <table>
-                <tr>
-                    <td><label for="driver">Driver:</label></td>
-                    <td>
-                        <select name="driver" id="driver_select">
-                            {% for driver in drivers %}
-                                <option value="{{ driver[0] }}">{{ driver[1] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="pick_up_point">Pick Up Point:</label></td>
-                    <td>
-                        <select name="pick_up_point" id="pick_up_point">
-                            {% for route in routes %}
-                                <option value="{{ route.pick_up_point }}" data-route_number="{{ route.route_number }}" data-destination="{{ route.destination }}">{{ route.pick_up_point }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="destination">Destination:</label></td>
-                    <td>
-                        <select name="destination" id="destination">
-                            {% for route in routes %}
-                                <option value="{{ route.destination }}" data-pick_up_point="{{ route.pick_up_point }}" data-route_number="{{ route.route_number }}">{{ route.destination }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="route_number">Route Number:</label></td>
-                    <td>
-                        <table id="route_numbers_table">
-                            <thead>
-                                <tr>
-                                    <th>Route Number</th>
-                                    <th>Pick Up Point</th>
-                                    <th>Destination</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for route in routes %}
-                                    <tr data-pick_up_point="{{ route.pick_up_point }}" data-destination="{{ route.destination }}">
-                                        <td>{{ route.route_number }}</td>
-                                        <td>{{ route.pick_up_point }}</td>
-                                        <td>{{ route.destination }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="departure_time">Departure Time:</label></td>
-                    <td><input type="datetime-local" id="departure_time" name="departure_time" required></td>
-                </tr>
-                <tr>
-                    <td><label for="arrival_time">Arrival Time:</label></td>
-                    <td><input type="datetime-local" id="arrival_time" name="arrival_time" required></td>
-                </tr>
-            </table>
-        
-            <input type="submit" value="Submit">
-        </form>
-        
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                $('#pick_up_point, #destination').change(function(){
-                    var pick_up_point = $('#pick_up_point').val();
-                    var destination = $('#destination').val();
-                    $('#route_numbers_table tbody tr').each(function(){
-                        if ($(this).data('pick_up_point') == pick_up_point && $(this).data('destination') == destination) {
-                            var route_number = $(this).children('td:first').text();
-                            $('#route_number').val(route_number);
-                            return false;
-                        }
-                    });
-                });
-        
-                $('#driver_select').change(function(){
-                    var driver_id = $(this).val();
-                    $.getJSON('/get_driver_name/' + driver_id, function(data){
-                        var driver_name = data['driver_name'];
-                        $('input#driver_name').val(driver_name);
-                    });
-                });
-            });
-        </script>            
-</body>
-</html>
+        </div>
+
+        <div class="form-group">
+            <label for="route_number">Route Number:</label>
+            <input type="text" name="route_number" id="route_number" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="pick_up_point">Pick-up Point:</label>
+            <input type="text" name="pick_up_point" id="pick_up_point" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="destination">Destination:</label>
+            <input type="text" name="destination" id="destination" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="departure_time">Departure Time:</label>
+            <input type="datetime-local" name="departure_time" id="departure_time" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="arrival_time">Arrival Time:</label>
+            <input type="datetime-local" name="arrival_time" id="arrival_time" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

@@ -106,19 +106,21 @@ def admin():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM drivers")
         drivers = cursor.fetchall()
-        cursor.close()
 
         driver_id = None  # Initialize the driver_id variable
 
         if request.method == 'POST':
+            manage_button = request.form.get('manage_button')
+            if manage_button:
+                return redirect(url_for('management'))
+
             driver_id = request.form.get('driver_id')
             if driver_id:
-                cursor = mysql.connection.cursor()
-                cursor.execute("DELETE FROM drivers WHERE driver_id = %s", (driver_id,))
+                cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
                 mysql.connection.commit()
-                cursor.close()
                 flash('Driver data deleted successfully!')
 
+        cursor.close()
         return render_template('admin.html', drivers=drivers, driver_id=driver_id)
     else:
         return redirect(url_for('login'))
@@ -254,67 +256,24 @@ def post_edit_driver():
 
 @app.route('/management')
 def management():
-    return render_template('management.html')
+    try:
+        # Establish a connection to the database
+        conn = sqlite3.connect('mydatabase.db')
+        c = conn.cursor()
 
-@app.route('/clock_in_out', methods=['POST'])
-def clock_in_out():
-    driver_id = request.form.get('driver_id')
-    action = request.form.get('action')  # 'clock_in' or 'clock_out'
+        # Execute a SELECT statement on the 'drivers' table
+        c.execute('SELECT id, Name FROM drivers;')
+        drivers = c.fetchall()
 
-    # Retrieve the driver from the database using the driver_id
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
-    driver = cursor.fetchone()
-    cursor.close()
+        # Close the database connection
+        conn.close()
 
-    if not driver:
-        flash('Invalid driver ID')
-        return redirect(url_for('admin'))
-    if action not in ['clock_in', 'clock_out']:
-        flash('Invalid action!', 'danger')
-        return redirect(url_for('home'))
-
-    if action == 'clock_in':
-        # Perform clock in operation for the driver
-        clock_in_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        clock_in_status = 'clocked in'
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("UPDATE drivers SET clock_in_status = %s, clock_in_time = %s WHERE id = %s",
-                       (clock_in_status, clock_in_time, driver_id))
-        mysql.connection.commit()
-        cursor.close()
-
-        flash('Clock in successful!')
-    elif action == 'clock_out':
-        # Perform clock out operation for the driver
-        clock_out_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        clock_out_status = 'clocked out'
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("UPDATE drivers SET clock_out_status = %s, clock_out_time = %s WHERE id = %s",
-                       (clock_out_status, clock_out_time, driver_id))
-        mysql.connection.commit()
-        cursor.close()
-
-        # Calculate the working hours for the driver
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT clock_in_time FROM drivers WHERE id = %s", (driver_id,))
-        clock_in_time = cursor.fetchone()[0]
-        cursor.close()
-
-        working_hours = calculate_working_hours(clock_in_time, clock_out_time)
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("UPDATE drivers SET working_hours = %s WHERE id = %s", (working_hours, driver_id))
-        mysql.connection.commit()
-        cursor.close()
-
-        flash('Clock out successful!')
-    else:
-        flash('Invalid action')
-
-    return redirect(url_for('admin'))
+        # Render management page with drivers list
+        return render_template('management.html', drivers=drivers)
+    except Exception as e:
+        # Handle any exceptions that occur during database operations
+        print(f"Error: {e}")
+        return "An error occurred while retrieving driver information."
 
 @app.route('/schedule_route', methods=['POST'])
 def schedule_route():
@@ -379,6 +338,7 @@ def get_route_number():
     response = {'route_number': route_number}
     return jsonify(response)
 
+
 @app.route('/assign_route', methods=['POST'])
 def assign_route():
     if 'username' in session and session['role'] == 'admin':
@@ -404,7 +364,6 @@ def assign_route():
     else:
         return redirect(url_for('login'))
 
-
 @app.route('/remove_route', methods=['POST'])
 def remove_route():
     if 'username' in session and session['role'] == 'admin':
@@ -428,6 +387,67 @@ def remove_route():
         return redirect(url_for('admin'))
     else:
         return redirect(url_for('login'))
+
+@app.route('/clock_in_out', methods=['POST'])
+def clock_in_out():
+    driver_id = request.form.get('driver_id')
+    action = request.form.get('action')  # 'clock_in' or 'clock_out'
+
+    # Retrieve the driver from the database using the driver_id
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
+    driver = cursor.fetchone()
+    cursor.close()
+
+    if not driver:
+        flash('Invalid driver ID')
+        return redirect(url_for('admin'))
+
+    if action not in ['clock_in', 'clock_out']:
+        flash('Invalid action!', 'danger')
+        return redirect(url_for('home'))
+
+    if action == 'clock_in':
+        # Perform clock in operation for the driver
+        clock_in_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        clock_in_status = 'clocked in'
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE drivers SET clock_in_status = %s, clock_in_time = %s WHERE id = %s",
+                       (clock_in_status, clock_in_time, driver_id))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash('Clock in successful!')
+    elif action == 'clock_out':
+        # Perform clock out operation for the driver
+        clock_out_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        clock_out_status = 'clocked out'
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE drivers SET clock_out_status = %s, clock_out_time = %s WHERE id = %s",
+                       (clock_out_status, clock_out_time, driver_id))
+        mysql.connection.commit()
+        cursor.close()
+
+        # Calculate the working hours for the driver
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT clock_in_time FROM drivers WHERE id = %s", (driver_id,))
+        clock_in_time = cursor.fetchone()[0]
+        cursor.close()
+
+        working_hours = calculate_working_hours(clock_in_time, clock_out_time)
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("UPDATE drivers SET working_hours = %s WHERE id = %s", (working_hours, driver_id))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash('Clock out successful!')
+    else:
+        flash('Invalid action')
+
+    return redirect(url_for('admin'))
 
 @app.route('/about')
 def about():
