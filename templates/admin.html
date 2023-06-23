@@ -222,6 +222,7 @@
         <tbody>
             {% for driver in drivers %}
             <tr>
+                <td>{{ driver[0] }}</td>
                 <td>{{ driver[1] }}</td>
                 <td>{{ driver[2] }}</td>
                 <td>{{ driver[3] }}</td>
@@ -232,11 +233,10 @@
                 <td>{{ driver[8] }}</td>
                 <td>{{ driver[9] }}</td>
                 <td>{{ driver[10] }}</td>
-                <td>{{ driver[11] }}</td>
                 <td>
                     <!-- Delete Button -->
                     <form action="{{ url_for('delete_driver') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
-                        <input type="hidden" name="driver_id" value="{{ driver[12] }}">
+                        <input type="hidden" name="driver_id" value="{{ driver[11] }}">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                     <!-- Edit Button -->

@@ -128,89 +128,57 @@ def register_driver():
     if request.method == 'POST':
         name = request.form.get('name')
         gender = request.form.get('gender')
-        dob = request.form.get('dob')
+        
+        # check if dob is in correct format
+        try:
+            dob = datetime.strptime(request.form.get('dob'), '%Y-%m-%d').date()
+        except ValueError:
+            flash('Invalid date format for Date of Birth. Please enter the date in YYYY-MM-DD format.')
+            return redirect(url_for('home'))
+
         license = request.form.get('license')
         vehicle_type = request.form.get('vehicle_type')
         vehicle_model = request.form.get('vehicle_model')
-        license_plate_number = request.form.get('license_plate_number')
-        organization = None
-        vehicle_classification = None
         start_date = request.form.get('start_date')
+        license_plate_number = request.form.get('license_plate_number')
+
+        # Dictionary mapping table names to organization names
+        tables = {
+            'super_metro': 'Super Metro',
+            'lopha_travellers': 'Lopha Travellers',
+            '2nk_sacco': '2NK Sacco',
+            'manchester_travellers': 'Manchester Travellers',
+            'neo_kenya_mpya_sacco': 'Neo Kenya Mpya Sacco',
+            '4nte_sacco': '4NTE Sacco',
+            'naekana_sacco': 'Naekana Sacco'
+        }
+
+        cursor = mysql.connection.cursor()
         route_number = None
 
-        # Add validation checks for other form fields if necessary
-        if not license_plate_number:
-            flash('License plate number is required.')
-            return redirect(url_for('home'))
-
-        # Query the relevant table to find the organization and vehicle classification for the given license plate number
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM super_metro WHERE license_plate_number=%s", (license_plate_number,))
-        result = cursor.fetchone()
-        if result:
-            organization = "Super Metro"
-            vehicle_classification = result[1]
-            route_number = result[2]
-        else:
-            cursor.execute("SELECT * FROM lopha_travellers WHERE license_plate_number=%s", (license_plate_number,))
+        for table, org_name in tables.items():
+            cursor.execute(f"SELECT vehicle_classification, route_number FROM {table} WHERE license_plate_number = %s", (license_plate_number,))
             result = cursor.fetchone()
             if result:
-                organization = "Lopha Travellers"
-                vehicle_classification = result[1]
-                route_number = result[2]
-            else:
-                cursor.execute("SELECT * FROM manchester_travellers WHERE license_plate_number=%s", (license_plate_number,))
-                result = cursor.fetchone()
-                if result:
-                    organization = "Manchester Travellers"
-                    vehicle_classification = result[1]
-                    route_number = result[2]
-                else:
-                    cursor.execute("SELECT * FROM 2nk_sacco WHERE license_plate_number=%s", (license_plate_number))
-                    result = cursor.fetchone()
-                    if result:
-                        organization = "2NK SACCO"
-                        vehicle_classification = result[1]
-                        route_number = result[2]
-                    else:                    
-                        cursor.execute("SELECT * FROM neo_kenya_mpya_sacco WHERE license_plate_number=%s", (license_plate_number))
-                        result = cursor.fetchone()
-                        if result:
-                            organization = "Neo Kenya Mpya SACCO"
-                            vehicle_classification = result[1]
-                            route_number = result[2]
-                        else:
-                            cursor.execute("SELECT * FROM 4nte_sacco WHERE license_plate_number=%s", (license_plate_number))
-                            result = cursor.fetchone()
-                            if result:
-                                organization = "4NTE SACCO"
-                                vehicle_classification = result[1]
-                                route_number = result[2]
-                            else:
-                                cursor.execute("SELECT * FROM naekana_sacco WHERE license_plate_number=%s", (license_plate_number))
-                                if result:
-                                    result = cursor.fetchone()
-                                    vehicle_classification = result[1]
-                                    route_number = result[2]
-                                else:
-                                    flash('License plate number not found')
-                                    return redirect(url_for('home'))
+                organization = org_name
+                vehicle_classification = result[0]
+                route_number = result[1]
+                break
 
-        # Store driver registration data in the database
+        if route_number is None:
+            flash('License plate number not found')
+            return redirect(url_for('home'))
+
         cursor.execute(
-            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, "
-            "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number, organization, vehicle_classification, route_number))
-
+            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,  organization, vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+            (name, gender, dob, license, vehicle_type, vehicle_model,start_date, license_plate_number,  organization, vehicle_classification, route_number))
+        
         mysql.connection.commit()
-        cursor.close()
 
-        flash('Registration Successful!')
+        flash('Driver registration successful')
         return redirect(url_for('home'))
 
-    else:  # GET request
-        license_plate_number = request.args.get("license_plate_number")
-        return render_template('register.html', license_plate_number=license_plate_number)
-
+    return render_template('register.html')
 
 @app.route('/getdata')
 def getdata():
@@ -231,9 +199,9 @@ def edit_driver(driver_id):
 
     if request.method == 'POST':
         # Get updated driver information from the form
-        name = request.form['name']
-        gender = request.form['gender']
-        dob = request.form['dob']
+        name = request.form.get('name')
+        gender = request.form.get('gender')
+        dob = request.form.get('dob')
         license = request.form['license']
         vehicle_type = request.form['vehicle_type']
         vehicle_model = request.form['vehicle_model']
