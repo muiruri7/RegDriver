@@ -49,12 +49,11 @@ def store_driver_registration_data(name, gender, dob, license, vehicle_type, veh
 
     cursor = mysql.connection.cursor()
     cursor.execute(
-        "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number, "
-        "organization, vehicle_classification, route_number) "
-        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",  
-        (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number, organization,vehicle_classification,
-          route_number)
-    )
+        "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, "
+        "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (
+            name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,
+            organization, vehicle_classification, route_number))
+
     mysql.connection.commit()
     cursor.close()
 
@@ -199,10 +198,8 @@ def register_driver():
 
         # Store driver registration data in the database
         cursor.execute(
-            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model,  "
-            "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (
-                name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,
-                organization, vehicle_classification, route_number))
+            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, "
+            "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number, organization, vehicle_classification, route_number))
 
         mysql.connection.commit()
         cursor.close()
