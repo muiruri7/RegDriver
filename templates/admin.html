@@ -233,11 +233,6 @@
                 <td>{{ driver[9] }}</td>
                 <td>{{ driver[10] }}</td>
                 <td>
-                    <!-- Manage Button -->
-                    <form action="{{ url_for('management') }}" method="POST">
-                        <input type="hidden" name="driver_id" value="{{ driver[11] }}">
-                        <button type="submit" class="btn btn-primary btn-sm">Manage</button>
-                    </form>
                     <!-- Delete Button -->
                     <form action="{{ url_for('delete_driver') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this driver?');">
                         <input type="hidden" name="driver_id" value="{{ driver[11] }}">
