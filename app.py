@@ -257,11 +257,10 @@ def post_edit_driver():
 @app.route('/management/<int:driver_id>', methods=['GET', 'POST'])
 def management(driver_id):
     # Retrieve driver name from the database
-    cursor = mysql.connection.cursor()
+    mycursor = mysql.connection.cursor()
     query = "SELECT name FROM drivers WHERE id=%s"
-    cursor.execute(query, (driver_id,))
-    driver_name = cursor.fetchone()[0]
-    cursor.close()
+    mycursor.execute(query, (driver_id,))
+    driver_name = mycursor.fetchone()[0]
 
     if request.method == 'POST':
         name = request.form.get('name')
@@ -271,7 +270,6 @@ def management(driver_id):
         destination = request.form.get('destination')
 
         # Retrieve route number from routes table
-        mycursor = mysql.connection.cursor()
         sql = "SELECT route_number FROM routes WHERE pickup_point = %s AND destination = %s"
         val = (pickup_point, destination)
         mycursor.execute(sql, val)
@@ -282,8 +280,7 @@ def management(driver_id):
             route_number = result[0]
             sql = "INSERT INTO roster (name, clock_in, clock_out, pickup_point, destination, route_number) VALUES (%s, %s, %s, %s, %s, %s)"
             val = (name, clock_in, clock_out, pickup_point, destination, route_number)
-            cursor = mysql.connection.cursor()
-            cursor.execute(sql, val)
+            mycursor.execute(sql, val)
             mysql.connection.commit()
 
             flash('Driver scheduled successfully')
@@ -292,13 +289,14 @@ def management(driver_id):
             flash('No route found for the selected pickup point and destination')
 
     # Retrieve distinct pickup points from routes table
-    mycursor = mysql.connection.cursor()
     mycursor.execute("SELECT DISTINCT pickup_point FROM routes")
     pickup_points = mycursor.fetchall()
 
     # Retrieve distinct destinations from routes table
     mycursor.execute("SELECT DISTINCT destination FROM routes")
     destinations = mycursor.fetchall()
+
+    mycursor.close()
 
     return render_template('management.html', driver_name=driver_name, pickup_points=pickup_points, destinations=destinations)
 

@@ -15,39 +15,35 @@
             </ul>
         </nav>
     </header>
-<h1>Driver Management Dashboard</h1>
-<h2>Schedule Driver:</h2>
-<form method="POST">
-<label for="name">Driver Name:</label>
-<input type="text" id="name" name="name" value="{{ driver_name }}" readonly><br><br>
-
-<label for="clock_in">Clock-in Time:</label>
-<input type="datetime-local" id="clock_in" name="clock_in"><br><br>
-
-<label for="clock_out">Clock-out Time:</label>
-<input type="datetime-local" id="clock_out" name="clock_out"><br><br>
-
-<form method="post">
-    <label for="pickup-point">Pickup Point:</label>
-    <select id="pickup-point" name="pickup_point">
-    {% for point in pickup_points %}
-      <option value="{{ point[0] }}">{{ point[0] }}</option>
-    {% endfor %}
-    </select><br>
-
+    <h1>Driver Management Dashboard</h1>
+    <h2>Schedule Driver:</h2>
+    <form method="POST">
+    <label for="name">Driver Name:</label>
+    <input type="text" id="name" name="name" value="{{ driver_name }}" readonly><br><br>
+    
+    <label for="clock_in">Clock-in Time:</label>
+    <input type="datetime-local" id="clock_in" name="clock_in"><br><br>
+    
+    <label for="clock_out">Clock-out Time:</label>
+    <input type="datetime-local" id="clock_out" name="clock_out"><br><br>
+    
+    <label for="pickup_point">Pickup Point:</label>
+    <select id="pickup_point" name="pickup_point">
+        {% for point in pickup_points %}
+            <option value="{{ point[0] }}">{{ point[0] }}</option>
+        {% endfor %}
+    </select><br><br>
+    
     <label for="destination">Destination:</label>
     <select id="destination" name="destination">
-    {% for destination in destinations %}
-      <option value="{{ destination[0] }}">{{ destination[0] }}</option>
-    {% endfor %}
-    </select><br>
-</form>
-
-<form>
+        {% for destination in destinations %}
+            <option value="{{ destination[0] }}">{{ destination[0] }}</option>
+        {% endfor %}
+    </select><br><br>
+    
     <input type="submit" value="Schedule Driver">
-</form>
-
-</form>
+    </form>
+    
 
 </body>
 </html>
