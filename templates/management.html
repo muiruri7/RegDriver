@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Management Dashboard</title>
+</head>
+<body>
+
+<h1>Management Dashboard</h1>
+
+<h2>Schedule Driver:</h2>
+<form method="POST">
+<label for="name">Driver Name:</label>
+<input type="text" id="name" name="name" value="{{ driver_name }}" readonly><br><br>
+
+<label for="clock_in">Clock-in Time:</label>
+<input type="datetime-local" id="clock_in" name="clock_in"><br><br>
+
+<label for="clock_out">Clock-out Time:</label>
+<input type="datetime-local" id="clock_out" name="clock_out"><br><br>
+
+<label for="route_number">Route Number:</label>
+<input type="number" id="route_number" name="route_number"><br><br>
+
+<input type="submit" value="Schedule Driver">
+</form>
+
+</body>
+</html>

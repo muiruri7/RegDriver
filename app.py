@@ -254,6 +254,31 @@ def post_edit_driver():
     driver_id = request.form['driver_id']
     return redirect(url_for('edit_driver', driver_id=driver_id))
 
+@app.route('/management/<int:driver_id>', methods=['GET', 'POST'])
+def management(driver_id):
+    # Retrieve driver name from the database
+    cursor = mysql.connection.cursor()
+    query = "SELECT name FROM drivers WHERE id=%s"
+    cursor.execute(query, (driver_id,))
+    driver_name = cursor.fetchone()[0]
+    cursor.close()
+
+    if request.method == 'POST':
+        name = request.form.get['name']
+        clock_in = request.form.get['clock_in']
+        clock_out = request.form.get['clock_out']
+        route_number = request.form.get['route_number']
+
+        cursor .execute(
+            "INSERT INTO roster (name, clock_in, clock_out, route_number) VALUES (%s, %s, %s, %s)",
+            (name, clock_in, clock_out, route_number))
+        mysql.connection.commit()
+
+        flash('Driver scheduled successfully')
+        return redirect(url_for('home'))
+
+    return render_template('management.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
