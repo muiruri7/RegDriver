@@ -264,20 +264,43 @@ def management(driver_id):
     cursor.close()
 
     if request.method == 'POST':
-        name = request.form.get['name']
-        clock_in = request.form.get['clock_in']
-        clock_out = request.form.get['clock_out']
-        route_number = request.form.get['route_number']
+        name = request.form.get('name')
+        clock_in = request.form.get('clock_in')
+        clock_out = request.form.get('clock_out')
+        pickup_point = request.form.get('pickup_point')
+        destination = request.form.get('destination')
 
-        cursor .execute(
-            "INSERT INTO roster (name, clock_in, clock_out, route_number) VALUES (%s, %s, %s, %s)",
-            (name, clock_in, clock_out, route_number))
-        mysql.connection.commit()
+        # Retrieve route number from routes table
+        mycursor = mysql.connection.cursor()
+        sql = "SELECT route_number FROM routes WHERE pickup_point = %s AND destination = %s"
+        val = (pickup_point, destination)
+        mycursor.execute(sql, val)
+        result = mycursor.fetchone()
 
-        flash('Driver scheduled successfully')
-        return redirect(url_for('home'))
+        # Insert data into roster table
+        if result:
+            route_number = result[0]
+            sql = "INSERT INTO roster (name, clock_in, clock_out, pickup_point, destination, route_number) VALUES (%s, %s, %s, %s, %s, %s)"
+            val = (name, clock_in, clock_out, pickup_point, destination, route_number)
+            cursor = mysql.connection.cursor()
+            cursor.execute(sql, val)
+            mysql.connection.commit()
 
-    return render_template('management.html')
+            flash('Driver scheduled successfully')
+            return redirect(url_for('home'))
+        else:
+            flash('No route found for the selected pickup point and destination')
+
+    # Retrieve distinct pickup points from routes table
+    mycursor = mysql.connection.cursor()
+    mycursor.execute("SELECT DISTINCT pickup_point FROM routes")
+    pickup_points = mycursor.fetchall()
+
+    # Retrieve distinct destinations from routes table
+    mycursor.execute("SELECT DISTINCT destination FROM routes")
+    destinations = mycursor.fetchall()
+
+    return render_template('management.html', driver_name=driver_name, pickup_points=pickup_points, destinations=destinations)
 
 @app.route('/about')
 def about():
