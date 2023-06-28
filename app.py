@@ -107,7 +107,10 @@ def admin():
         cursor.execute("SELECT * FROM drivers")
         drivers = cursor.fetchall()
 
-        driver_id = None  # Initialize the driver_id variable
+        cursor.execute("SELECT * FROM roster")
+        roster = cursor.fetchall()
+
+        driver_id = None
 
         if request.method == 'POST':
             manage_button = request.form.get('manage_button')
@@ -121,7 +124,7 @@ def admin():
                 flash('Driver data deleted successfully!')
 
         cursor.close()
-        return render_template('admin.html', drivers=drivers, driver_id=driver_id)
+        return render_template('admin.html', drivers=drivers, roster=roster, driver_id=driver_id)
     else:
         return redirect(url_for('login'))
 

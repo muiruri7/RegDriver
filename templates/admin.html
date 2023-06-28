@@ -251,6 +251,30 @@
             {% endfor %}
         </tbody>
     </table>
-    
+    <h1>Roster Details</h1>
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Clock-In Time</th>
+                <th>Clock-Out Time</th>
+                <th>PickUp Point</th>
+                <th>Destination</th>
+                <th>Route Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in roster %}
+            <tr>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>{{ row[5] }}</td>
+                <td>{{ row[6] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
 </body>
 </html>
