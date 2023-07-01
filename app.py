@@ -303,6 +303,35 @@ def management(driver_id):
 
     return render_template('management.html', driver_name=driver_name, pickup_points=pickup_points, destinations=destinations)
 
+@app.route('/organizations', methods=['GET', 'POST'])
+def organizations():
+    if request.method == 'POST':
+        org_name = request.form.get('org_name')
+
+        if org_name is None:
+            return "Missing 'org_name' field", 400
+
+        create_table_query = f'''
+            CREATE TABLE {org_name} (
+                license_plate_number VARCHAR(20),
+                vehicle_type VARCHAR(50),
+                vehicle_model VARCHAR(50),
+                vehicle_classification VARCHAR(50),
+                route_number INT(20),
+                driver_status VARCHAR(20)
+            )
+        '''
+
+        try:
+            with mysql.connection.cursor() as cursor:
+                cursor.execute(create_table_query)
+            mysql.connection.commit()
+            return 'Organization registered successfully.'
+        except mysql.connector.Error as error:
+            return 'Error registering organization: {}'.format(error)
+    else:
+        return render_template('organizations.html')
+    
 @app.route('/about')
 def about():
     return render_template('about.html')
