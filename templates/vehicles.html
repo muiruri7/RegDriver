@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Vehicles from Spreadsheet</title>
+</head>
+<body>
+    <h1>Add Vehicles from Spreadsheet</h1>
+    <form action="/upload_spreadsheet" method="POST" enctype="multipart/form-data">
+        <!-- File Upload -->
+        <label for="spreadsheet">Upload Spreadsheet:</label>
+        <input type="file" name="spreadsheet" accept=".xlsx, .xls" required>
+        <br>
+
+        <!-- Submit button -->
+        <button type="submit">Upload and Add Vehicles</button>
+    </form>
+</body>
+</html>

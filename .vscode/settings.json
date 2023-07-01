@@ -36,6 +36,7 @@
         "Green House",
         "Hillcrest",
         "Hoppa",
+        "iterrows",
         "JKIA",
         "Jogoo",
         "jsonify",
@@ -203,6 +204,7 @@
         "Uthiru",
         "Voi",
         "Wendani",
+        "werkzeug",
         "Westlands"
     ]
   }

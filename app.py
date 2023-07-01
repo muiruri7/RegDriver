@@ -3,7 +3,10 @@ from flask_mysqldb import MySQL
 from datetime import datetime
 from functools import wraps
 import sqlite3
+import os
 import mysql.connector
+from werkzeug.utils import secure_filename
+import pandas as pd
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
 
 app = Flask(__name__)
@@ -11,9 +14,13 @@ app.config['MYSQL_HOST'] = MYSQL_HOST
 app.config['MYSQL_USER'] = MYSQL_USER
 app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
 app.config['MYSQL_DB'] = MYSQL_DB
+app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.secret_key = SECRET_KEY
 
 mysql = MySQL(app)
+
+ALLOWED_EXTENSIONS = {'xlsx', 'xls'}
+UPLOAD_FOLDER = 'uploads/'
 
 # Defines!
 def retrieve_admin(username):
@@ -67,6 +74,38 @@ def calculate_working_hours(clock_in_time, clock_out_time):
 
     working_hours = clock_out - clock_in
     return str(working_hours)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def insert_vehicle(org_name, license_plate, vehicle_type, vehicle_model, vehicle_classification, route_number, driver_status):
+    insert_query = f'''
+        INSERT INTO {org_name} (
+            license_plate_number,
+            vehicle_type,
+            vehicle_model,
+            vehicle_classification,
+            route_number,
+            driver_status
+        ) VALUES (
+            '{license_plate}',
+            '{vehicle_type}',
+            '{vehicle_model}',
+            '{vehicle_classification}',
+            {route_number},
+            '{driver_status}'
+        )
+    '''
+
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(insert_query)
+        mysql.connection.commit()
+        cursor.close()
+        return True
+    except mysql.connector.Error as error:
+        print('Error inserting vehicle:', str(error))
+        return False
 
 #Routes!
 @app.route('/login', methods=['GET', 'POST'])
@@ -332,6 +371,47 @@ def organizations():
     else:
         return render_template('home.html')
     
+@app.route('/upload_spreadsheet', methods=['POST'])
+def upload_spreadsheet():
+    # Check if file was uploaded
+    if 'spreadsheet' not in request.files:
+        return "No spreadsheet file provided", 400
+
+    file = request.files['spreadsheet']
+
+    # Check if file has a valid filename and extension
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        # Save the uploaded file
+        file.save(file_path)
+
+        try:
+            # Read data from the spreadsheet using pandas
+            df = pd.read_excel(file_path)
+
+            # Process and insert the data into the database
+            for index, row in df.iterrows():
+                license_plate_number = row['License Plate Number']
+                vehicle_type = row['Vehicle Type']
+                vehicle_model = row['Vehicle Model']
+                vehicle_classification = row['Vehicle Classification']
+                route_number = row['Route Number']
+                driver_status = row['Driver Status']
+
+                # Perform database insertion
+                success = insert_vehicle( license_plate_number, vehicle_type, vehicle_model, vehicle_classification, route_number, driver_status)
+
+                if not success:
+                    return 'Error inserting vehicles', 500
+
+            return 'Vehicles added successfully.'
+        except Exception as e:
+            return 'Error processing spreadsheet: {}'.format(str(e)), 500
+    else:
+        return 'Invalid spreadsheet file', 400
+
 @app.route('/about')
 def about():
     return render_template('about.html')
