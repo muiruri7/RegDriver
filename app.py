@@ -92,7 +92,7 @@ def insert_vehicle(org_name, license_plate, vehicle_type, vehicle_model, vehicle
             '{vehicle_type}',
             '{vehicle_model}',
             '{vehicle_classification}',
-            {route_number},
+            '{route_number}',
             '{driver_status}'
         )
     '''
@@ -370,7 +370,11 @@ def organizations():
             return 'Error registering organization: {}'.format(error)
     else:
         return render_template('home.html')
-    
+
+@app.route('/vehicles', methods=['GET'])
+def render_vehicles():
+    return render_template('vehicles.html')
+
 @app.route('/upload_spreadsheet', methods=['POST'])
 def upload_spreadsheet():
     # Check if file was uploaded
