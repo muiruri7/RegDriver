@@ -318,7 +318,7 @@ def organizations():
                 vehicle_model VARCHAR(50),
                 vehicle_classification VARCHAR(50),
                 route_number INT(20),
-                driver_status VARCHAR(20)
+                vehicle_status ENUM('suspended', 'engaged')
             )
         '''
 
@@ -330,7 +330,7 @@ def organizations():
         except mysql.connector.Error as error:
             return 'Error registering organization: {}'.format(error)
     else:
-        return render_template('organizations.html')
+        return render_template('home.html')
     
 @app.route('/about')
 def about():
