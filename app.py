@@ -7,14 +7,14 @@ import os
 import mysql.connector
 from werkzeug.utils import secure_filename
 import pandas as pd
-from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY
+from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB,UPLOAD_FOLDER, SECRET_KEY
 
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = MYSQL_HOST
 app.config['MYSQL_USER'] = MYSQL_USER
 app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
 app.config['MYSQL_DB'] = MYSQL_DB
-app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = SECRET_KEY
 
 mysql = MySQL(app)
@@ -48,7 +48,7 @@ def login_required(func):
         return func(*args, **kwargs)
     return decorated_function
 
-def store_driver_registration_data(name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,
+def store_driver_registration_data(name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,
                                   organization,vehicle_classification, route_number=None):
     # Set default value for route_number if it is None or empty
     if not route_number:
@@ -56,9 +56,9 @@ def store_driver_registration_data(name, gender, dob, license, vehicle_type, veh
 
     cursor = mysql.connection.cursor()
     cursor.execute(
-        "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, "
+        "INSERT INTO drivers (name, gender, license, vehicle_type, vehicle_model, "
         "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (
-            name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,
+            name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,
             organization, vehicle_classification, route_number))
 
     mysql.connection.commit()
@@ -172,14 +172,6 @@ def register_driver():
     if request.method == 'POST':
         name = request.form.get('name')
         gender = request.form.get('gender')
-        
-        # check if dob is in correct format
-        try:
-            dob = datetime.strptime(request.form.get('dob'), '%Y-%m-%d').date()
-        except ValueError:
-            flash('Invalid date format for Date of Birth. Please enter the date in YYYY-MM-DD format.')
-            return redirect(url_for('home'))
-
         license = request.form.get('license')
         vehicle_type = request.form.get('vehicle_type')
         vehicle_model = request.form.get('vehicle_model')
@@ -214,8 +206,8 @@ def register_driver():
             return redirect(url_for('home'))
 
         cursor.execute(
-            "INSERT INTO drivers (name, gender, dob, license, vehicle_type, vehicle_model, start_date, license_plate_number,  organization, vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-            (name, gender, dob, license, vehicle_type, vehicle_model,start_date, license_plate_number,  organization, vehicle_classification, route_number))
+            "INSERT INTO drivers (name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,  organization, vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+            (name, gender, license, vehicle_type, vehicle_model,start_date, license_plate_number,  organization, vehicle_classification, route_number))
         
         mysql.connection.commit()
 
@@ -245,7 +237,6 @@ def edit_driver(driver_id):
         # Get updated driver information from the form
         name = request.form.get('name')
         gender = request.form.get('gender')
-        dob = request.form.get('dob')
         license = request.form['license']
         vehicle_type = request.form['vehicle_type']
         vehicle_model = request.form['vehicle_model']
@@ -257,8 +248,8 @@ def edit_driver(driver_id):
 
         # Update driver information in the database
         cursor = mysql.connection.cursor()
-        query = "UPDATE drivers SET Name=%s, Gender=%s, dob=%s, license=%s, vehicle_type=%s, vehicle_model=%s, vehicle_classification=%s, license_plate_number=%s, organization=%s, start_date=%s, route_number=%s WHERE id=%s"
-        cursor.execute(query, (name, gender, dob, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization, start_date, routes, driver_id))
+        query = "UPDATE drivers SET Name=%s, Gender=%s, license=%s, vehicle_type=%s, vehicle_model=%s, vehicle_classification=%s, license_plate_number=%s, organization=%s, start_date=%s, route_number=%s WHERE id=%s"
+        cursor.execute(query, (name, gender, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization, start_date, routes, driver_id))
         mysql.connection.commit()
         cursor.close()
 
@@ -369,7 +360,7 @@ def organizations():
         except mysql.connector.Error as error:
             return 'Error registering organization: {}'.format(error)
     else:
-        return render_template('home.html')
+        return render_template('organizations.html')
 
 @app.route('/vehicles', methods=['GET'])
 def render_vehicles():

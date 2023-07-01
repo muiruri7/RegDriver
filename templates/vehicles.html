@@ -4,7 +4,20 @@
     <title>Add Vehicles from Spreadsheet</title>
 </head>
 <body>
-    <h1>Add Vehicles from Spreadsheet</h1>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register Driver</a></li>
+                <li><a href="/admin">Driver Details</a></li>
+                <li><a href="/organizations">Register Organization</a></li>
+                <li><a href="/vehicles">Register Organizations Vehicle</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Add Vehicles</h1>
+    <h2>Instructions:</h2>
+    <p>The organization is mandated to generate a spreadsheet containing essential information related to the registration of side organizations. The title of the spreadsheet should correspond to the name of each side organization prior to its registration. Within the spreadsheet, the following data must be included: the license plate number of each vehicle associated with the  organization, the vehicle type (i.e., the company that manufactured the vehicle), the vehicle model,  the classification of the vehicle (e.g.,matatu, bus), the route number assigned to the vehicle, and the current driver status (e.g., active, suspended). By organizing this data in a spreadsheet, the organization can maintain a comprehensive record of the side organizations, their respective vehicles, and the corresponding registration details.</p>
     <form action="/upload_spreadsheet" method="POST" enctype="multipart/form-data">
         <!-- File Upload -->
         <label for="spreadsheet">Upload Spreadsheet:</label>
