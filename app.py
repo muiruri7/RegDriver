@@ -48,18 +48,16 @@ def login_required(func):
         return func(*args, **kwargs)
     return decorated_function
 
-def store_driver_registration_data(name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,
-                                  organization,vehicle_classification, route_number=None):
+def store_driver_registration_data(name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number=None):
     # Set default value for route_number if it is None or empty
     if not route_number:
         route_number = 'N/A'
 
     cursor = mysql.connection.cursor()
     cursor.execute(
-        "INSERT INTO drivers (name, gender, license, vehicle_type, vehicle_model, "
-        "license_plate_number,start_date, organization,vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (
-            name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,
-            organization, vehicle_classification, route_number))
+        "INSERT INTO drivers (name, gender, mobile_number, license, national_id, license_plate_number, "
+        "organization, vehicle_classification, vehicle_ model, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, mobile_number, license,
+         national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number))
 
     mysql.connection.commit()
     cursor.close()
@@ -151,19 +149,31 @@ def admin():
 
         driver_id = None
 
-        if request.method == 'POST':
-            manage_button = request.form.get('manage_button')
-            if manage_button:
-                return redirect(url_for('management'))
-
-            driver_id = request.form.get('driver_id')
-            if driver_id:
-                cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
-                mysql.connection.commit()
-                flash('Driver data deleted successfully!')
-
-        cursor.close()
         return render_template('admin.html', drivers=drivers, roster=roster, driver_id=driver_id)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/delete_driver', methods=['POST'])
+def delete_driver():
+    if 'username' in session and session['role'] == 'admin':
+        driver_id = request.form.get('driver_id')
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
+        driver = cursor.fetchone()
+        cursor.close()
+
+        if not driver:
+            flash('Invalid driver ID')
+            return redirect(url_for('admin'))
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
+        mysql.connection.commit()
+        cursor.close()
+
+        flash('Driver data deleted successfully!')
+        return redirect(url_for('admin'))
     else:
         return redirect(url_for('login'))
 
@@ -172,11 +182,11 @@ def register_driver():
     if request.method == 'POST':
         name = request.form.get('name')
         gender = request.form.get('gender')
+        mobile_number = request.form.get('mobile_number')
         license = request.form.get('license')
-        vehicle_type = request.form.get('vehicle_type')
-        vehicle_model = request.form.get('vehicle_model')
-        start_date = request.form.get('start_date')
+        national_id = request.form.get('national_id')
         license_plate_number = request.form.get('license_plate_number')
+        vehicle_model = request.form.get('vehicle_model')
 
         # Dictionary mapping table names to organization names
         tables = {
@@ -206,8 +216,8 @@ def register_driver():
             return redirect(url_for('home'))
 
         cursor.execute(
-            "INSERT INTO drivers (name, gender, license, vehicle_type, vehicle_model, start_date, license_plate_number,  organization, vehicle_classification, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-            (name, gender, license, vehicle_type, vehicle_model,start_date, license_plate_number,  organization, vehicle_classification, route_number))
+            "INSERT INTO drivers (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+            (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number))
         
         mysql.connection.commit()
 
@@ -235,52 +245,27 @@ def edit_driver(driver_id):
 
     if request.method == 'POST':
         # Get updated driver information from the form
-        name = request.form.get('name')
-        gender = request.form.get('gender')
+        name = request.form.get['name']
+        gender = request.form.get['gender']
+        mobile_number = request.form.get['mobile_number']
         license = request.form['license']
-        vehicle_type = request.form['vehicle_type']
-        vehicle_model = request.form['vehicle_model']
-        vehicle_classification = request.form['vehicle_classification']
+        national_id = request.form.get['national_id']
         license_plate_number = request.form['license_plate_number']
         organization = request.form['organization']
-        start_date = request.form['start_date']
-        routes = request.form['routes']
+        vehicle_classification = request.form['vehicle_classification']
+        vehicle_model = request.form['vehicle_model']
+        route_number = request.form['routes']
 
         # Update driver information in the database
         cursor = mysql.connection.cursor()
-        query = "UPDATE drivers SET Name=%s, Gender=%s, license=%s, vehicle_type=%s, vehicle_model=%s, vehicle_classification=%s, license_plate_number=%s, organization=%s, start_date=%s, route_number=%s WHERE id=%s"
-        cursor.execute(query, (name, gender, license, vehicle_type, vehicle_model, vehicle_classification, license_plate_number, organization, start_date, routes, driver_id))
+        query = "UPDATE drivers SET name=%s, gender=%s, mobile_number=%s, license=%s, national_id=%s, license_plate_number=%s, organization=%s, vehicle_classification=%s, vehicle_model=%s, route_number=%s WHERE id=%s"
+        cursor.execute(query, (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number, driver_id))
         mysql.connection.commit()
         cursor.close()
 
         return redirect(url_for('admin'))
 
     return render_template('edit_driver.html', driver=driver)
-
-
-@app.route('/delete_driver', methods=['POST'])
-def delete_driver():
-    if 'username' in session and session['role'] == 'admin':
-        driver_id = request.form.get('driver_id')
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
-        driver = cursor.fetchone()
-        cursor.close()
-
-        if not driver:
-            flash('Invalid driver ID')
-            return redirect(url_for('admin'))
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
-        mysql.connection.commit()
-        cursor.close()
-
-        flash('Driver data deleted successfully!')
-        return redirect(url_for('admin'))
-    else:
-        return redirect(url_for('login'))
         
 @app.route('/edit_driver', methods=['POST'])
 def post_edit_driver():
