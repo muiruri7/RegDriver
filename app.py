@@ -149,31 +149,26 @@ def admin():
 
         driver_id = None
 
+        if request.method == 'POST':
+            driver_id = request.form.get('driver_id')
+
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
+            driver = cursor.fetchone()
+            cursor.close()
+
+            if not driver:
+                flash('Invalid driver ID')
+                return redirect(url_for('admin'))
+
+            cursor = mysql.connection.cursor()
+            cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
+            mysql.connection.commit()
+            cursor.close()
+
+            flash('Driver data deleted successfully!')
+
         return render_template('admin.html', drivers=drivers, roster=roster, driver_id=driver_id)
-    else:
-        return redirect(url_for('login'))
-
-@app.route('/delete_driver', methods=['POST'])
-def delete_driver():
-    if 'username' in session and session['role'] == 'admin':
-        driver_id = request.form.get('driver_id')
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
-        driver = cursor.fetchone()
-        cursor.close()
-
-        if not driver:
-            flash('Invalid driver ID')
-            return redirect(url_for('admin'))
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
-        mysql.connection.commit()
-        cursor.close()
-
-        flash('Driver data deleted successfully!')
-        return redirect(url_for('admin'))
     else:
         return redirect(url_for('login'))
 
@@ -329,7 +324,6 @@ def organizations():
         create_table_query = f'''
             CREATE TABLE {org_name} (
                 license_plate_number VARCHAR(20),
-                vehicle_type VARCHAR(50),
                 vehicle_model VARCHAR(50),
                 vehicle_classification VARCHAR(50),
                 route_number INT(20),
@@ -391,6 +385,27 @@ def upload_spreadsheet():
             return 'Error processing spreadsheet: {}'.format(str(e)), 500
     else:
         return 'Invalid spreadsheet file', 400
+
+@app.route('/report', methods=['GET'])
+def driver_report():
+    name = request.args.get('name')
+
+    # MySQL connection
+    connection = mysql.connection
+    cursor = connection.cursor()
+
+    # Execute the search query
+    query = "SELECT * FROM drivers WHERE name LIKE %s"
+    cursor.execute(query, (f'%{name}%',))
+
+    # Fetch all matching results
+    results = cursor.fetchall()
+
+    # Close the database connection
+    cursor.close()
+    connection.close()
+
+    return render_template('report.html', results=results)
 
 @app.route('/about')
 def about():
