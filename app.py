@@ -258,6 +258,7 @@ def post_edit_driver():
 
 @app.route('/management/<int:driver_id>', methods=['GET', 'POST'])
 def management(driver_id):
+
     # Retrieve driver name from the database
     mycursor = mysql.connection.cursor()
     query = "SELECT name FROM drivers WHERE id=%s"
@@ -265,11 +266,20 @@ def management(driver_id):
     driver_name = mycursor.fetchone()[0]
 
     if request.method == 'POST':
-        name = request.form.get('name')
-        clock_in = request.form.get('clock_in')
-        clock_out = request.form.get('clock_out')
-        pickup_point = request.form.get('pickup_point')
-        destination = request.form.get('destination')
+        # Get the driver name
+        name = request.form['name']
+
+        # Get the clock-in time
+        clock_in = request.form['clock_in']
+
+        # Get the clock-out time
+        clock_out = request.form['clock_out']
+
+        # Get the pickup point
+        pickup_point = request.form['pickup_point']
+
+        # Get the destination
+        destination = request.form['destination']
 
         # Retrieve route number from routes table
         sql = "SELECT route_number FROM routes WHERE pickup_point = %s AND destination = %s"
@@ -281,7 +291,8 @@ def management(driver_id):
         if result:
             route_number = result[0]
             sql = "INSERT INTO roster (name, clock_in, clock_out, pickup_point, destination, route_number, driver_status, reason) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (name, clock_in, clock_out, pickup_point, destination, route_number, driver_status, reason)
+            val = (name, clock_in, clock_out, pickup_point, destination, route_number, 'Available',
+                   request.form['reason'] if 'reason' in request.form else '')
             mycursor.execute(sql, val)
             mysql.connection.commit()
 
