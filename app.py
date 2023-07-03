@@ -228,16 +228,16 @@ def edit_driver(driver_id):
 
     if request.method == 'POST':
         # Get updated driver information from the form
-        name = request.form.get['name']
-        gender = request.form.get['gender']
-        mobile_number = request.form.get['mobile_number']
-        license = request.form['license']
-        national_id = request.form.get['national_id']
-        license_plate_number = request.form['license_plate_number']
-        organization = request.form['organization']
-        vehicle_classification = request.form['vehicle_classification']
-        vehicle_model = request.form['vehicle_model']
-        route_number = request.form['routes']
+        name = request.form.get('name')
+        gender = request.form.get('gender')
+        mobile_number = request.form.get('mobile_number')
+        license = request.form('license')
+        national_id = request.form.get('national_id')
+        license_plate_number = request.form('license_plate_number')
+        organization = request.form('organization')
+        vehicle_classification = request.form(vehicle_classification)
+        vehicle_model = request.form('vehicle_model')
+        route_number = request.form('route_number')
 
         # Update driver information in the database
         cursor = mysql.connection.cursor()
