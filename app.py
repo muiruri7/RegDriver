@@ -186,12 +186,13 @@ def register_driver():
         route_number = None
 
         for table, org_name in tables.items():
-            cursor.execute(f"SELECT vehicle_classification, route_number FROM {table} WHERE license_plate_number = %s", (license_plate_number,))
+            cursor.execute(f"SELECT vehicle_classification,vehicle_model, route_number FROM {table} WHERE license_plate_number = %s", (license_plate_number,))
             result = cursor.fetchone()
             if result:
                 organization = org_name
                 vehicle_classification = result[0]
-                route_number = result[1]
+                vehicle_model = result[1]
+                route_number = result[2]
                 break
 
         if route_number is None:
@@ -279,8 +280,8 @@ def management(driver_id):
         # Insert data into roster table
         if result:
             route_number = result[0]
-            sql = "INSERT INTO roster (name, clock_in, clock_out, pickup_point, destination, route_number) VALUES (%s, %s, %s, %s, %s, %s)"
-            val = (name, clock_in, clock_out, pickup_point, destination, route_number)
+            sql = "INSERT INTO roster (name, clock_in, clock_out, pickup_point, destination, route_number, driver_status, reason) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (name, clock_in, clock_out, pickup_point, destination, route_number, driver_status, reason)
             mycursor.execute(sql, val)
             mysql.connection.commit()
 
