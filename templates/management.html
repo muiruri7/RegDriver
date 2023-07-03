@@ -152,31 +152,66 @@
     <h1>Driver Management Dashboard</h1>
     <h2>Schedule Driver:</h2>
     <form method="POST">
-    <label for="name">Driver Name:</label>
-    <input type="text" id="name" name="name" value="{{ driver_name }}" readonly><br><br>
+      <label for="name">Driver Name:</label>
+      <input type="text" id="name" name="name" value="{{ driver_name }}" readonly>
+      <br><br>
     
-    <label for="clock_in">Clock-in Time:</label>
-    <input type="datetime-local" id="clock_in" name="clock_in"><br><br>
+      <label for="clock_in">Clock-in Time:</label>
+      <input type="datetime-local" id="clock_in" name="clock_in">
+      <br><br>
     
-    <label for="clock_out">Clock-out Time:</label>
-    <input type="datetime-local" id="clock_out" name="clock_out"><br><br>
+      <label for="clock_out">Clock-out Time:</label>
+      <input type="datetime-local" id="clock_out" name="clock_out">
+      <br><br>
     
-    <label for="pickup_point">Pickup Point:</label>
-    <select id="pickup_point" name="pickup_point">
+      <label for="pickup_point">Pickup Point:</label>
+      <select id="pickup_point" name="pickup_point">
         {% for point in pickup_points %}
-            <option value="{{ point[0] }}">{{ point[0] }}</option>
+          <option value="{{ point[0] }}">{{ point[0] }}</option>
         {% endfor %}
-    </select><br><br>
+      </select>
+      <br><br>
     
-    <label for="destination">Destination:</label>
-    <select id="destination" name="destination">
+      <label for="destination">Destination:</label>
+      <select id="destination" name="destination">
         {% for destination in destinations %}
-            <option value="{{ destination[0] }}">{{ destination[0] }}</option>
+          <option value="{{ destination[0] }}">{{ destination[0] }}</option>
         {% endfor %}
-    </select><br><br>
+      </select>
+      <br><br>
     
-    <input type="submit" value="Schedule Driver">
+      <input type="submit" value="Schedule Driver">
+      <button type="button" id="suspend_driver">Suspend Driver</button>
     </form>
+    
+    <script>
+      // This function will be called when the "Suspend Driver" button is clicked.
+      function suspendDriver() {
+        // Show a form where the admin can input the reason for the suspension.
+        var form = document.createElement("form");
+        form.setAttribute("action", "/management");
+        form.setAttribute("method", "POST");
+    
+        var reasonInput = document.createElement("input");
+        reasonInput.setAttribute("type", "text");
+        reasonInput.setAttribute("name", "reason");
+        reasonInput.setAttribute("placeholder", "Enter the reason for suspension");
+    
+        form.appendChild(reasonInput);
+    
+        var submitButton = document.createElement("input");
+        submitButton.setAttribute("type", "submit");
+        submitButton.setAttribute("value", "Suspend Driver");
+    
+        form.appendChild(submitButton);
+    
+        document.body.appendChild(form);
+      }
+    
+      // Attach the "suspendDriver" function to the "suspend_driver" button.
+      document.getElementById("suspend_driver").addEventListener("click", suspendDriver);
+    </script>
+    
 
 </body>
 </html>

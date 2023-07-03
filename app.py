@@ -62,17 +62,6 @@ def store_driver_registration_data(name, gender, mobile_number, license, nationa
     mysql.connection.commit()
     cursor.close()
 
-def calculate_working_hours(clock_in_time, clock_out_time):
-    # Calculate the working hours based on the clock in/out times
-    # You can use any desired method or library for the calculation
-    # For example, you can use the datetime module to calculate the time difference
-    # and format it accordingly
-    clock_in = datetime.strptime(clock_in_time, "%Y-%m-%d %H:%M:%S")
-    clock_out = datetime.strptime(clock_out_time, "%Y-%m-%d %H:%M:%S")
-
-    working_hours = clock_out - clock_in
-    return str(working_hours)
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -143,32 +132,31 @@ def admin():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM drivers")
         drivers = cursor.fetchall()
-
         cursor.execute("SELECT * FROM roster")
         roster = cursor.fetchall()
-
         driver_id = None
-
-        if request.method == 'POST':
-            driver_id = request.form.get('driver_id')
-
-            cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
-            driver = cursor.fetchone()
-            cursor.close()
-
-            if not driver:
-                flash('Invalid driver ID')
-                return redirect(url_for('admin'))
-
-            cursor = mysql.connection.cursor()
-            cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
-            mysql.connection.commit()
-            cursor.close()
-
-            flash('Driver data deleted successfully!')
-
+        cursor.close()
         return render_template('admin.html', drivers=drivers, roster=roster, driver_id=driver_id)
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/delete_driver', methods=['POST'])
+def delete_driver():
+    if 'username' in session and session['role'] == 'admin':
+        driver_id = request.form.get('driver_id')
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM drivers WHERE id = %s", (driver_id,))
+        driver = cursor.fetchone()
+        cursor.close()
+        if not driver:
+            flash('Invalid driver ID')
+            return redirect(url_for('admin'))
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM drivers WHERE id = %s", (driver_id,))
+        mysql.connection.commit()
+        cursor.close()
+        flash('Driver data deleted successfully!')
+        return redirect(url_for('admin'))
     else:
         return redirect(url_for('login'))
 
@@ -385,27 +373,6 @@ def upload_spreadsheet():
             return 'Error processing spreadsheet: {}'.format(str(e)), 500
     else:
         return 'Invalid spreadsheet file', 400
-
-@app.route('/report', methods=['GET'])
-def driver_report():
-    name = request.args.get('name')
-
-    # MySQL connection
-    connection = mysql.connection
-    cursor = connection.cursor()
-
-    # Execute the search query
-    query = "SELECT * FROM drivers WHERE name LIKE %s"
-    cursor.execute(query, (f'%{name}%',))
-
-    # Fetch all matching results
-    results = cursor.fetchall()
-
-    # Close the database connection
-    cursor.close()
-    connection.close()
-
-    return render_template('report.html', results=results)
 
 @app.route('/about')
 def about():
