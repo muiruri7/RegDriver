@@ -181,37 +181,7 @@
       <br><br>
     
       <input type="submit" value="Schedule Driver">
-      <button type="button" id="suspend_driver">Suspend Driver</button>
     </form>
-    
-    <script>
-      // This function will be called when the "Suspend Driver" button is clicked.
-      function suspendDriver() {
-        // Show a form where the admin can input the reason for the suspension.
-        var form = document.createElement("form");
-        form.setAttribute("action", "/management");
-        form.setAttribute("method", "POST");
-    
-        var reasonInput = document.createElement("input");
-        reasonInput.setAttribute("type", "text");
-        reasonInput.setAttribute("name", "reason");
-        reasonInput.setAttribute("placeholder", "Enter the reason for suspension");
-    
-        form.appendChild(reasonInput);
-    
-        var submitButton = document.createElement("input");
-        submitButton.setAttribute("type", "submit");
-        submitButton.setAttribute("value", "Suspend Driver");
-    
-        form.appendChild(submitButton);
-    
-        document.body.appendChild(form);
-      }
-    
-      // Attach the "suspendDriver" function to the "suspend_driver" button.
-      document.getElementById("suspend_driver").addEventListener("click", suspendDriver);
-    </script>
-    
 
 </body>
 </html>
