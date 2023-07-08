@@ -258,7 +258,6 @@ def post_edit_driver():
 
 @app.route('/management/<int:driver_id>', methods=['GET', 'POST'])
 def management(driver_id):
-
     # Retrieve driver name from the database
     mycursor = mysql.connection.cursor()
     query = "SELECT name FROM drivers WHERE id=%s"
@@ -310,6 +309,45 @@ def management(driver_id):
     destinations = mycursor.fetchall()
 
     mycursor.close()
+
+    if request.method == 'POST':
+        driver_name = request.form.get('name')
+        clock_in = request.form.get('clock_in')
+        clock_out = request.form.get('clock_out')
+        pickup_point = request.form.get('pickup_point')
+        destination = request.form.get('destination')
+        suspend = request.form.get('suspend')
+        reason = request.form.get('reason')
+
+        # Update the driver's status based on the admin's input
+        if suspend == 'on':
+            # Update the driver's status to suspended in the 'drivers' table
+            mycursor = mysql.connection.cursor()
+            update_query = "UPDATE drivers SET driver_status = 'Suspended', reason = %s WHERE name = %s"
+            mycursor.execute(update_query, (reason, driver_name))
+            mysql.connection.commit()
+
+            # Update the driver's status to suspended in the 'roster' table
+            update_query = "UPDATE roster SET driver_status = 'Suspended', reason = %s WHERE name = %s"
+            mycursor.execute(update_query, (reason, driver_name))
+            mysql.connection.commit()
+
+            mycursor.close()
+        else:
+            # Update the driver's status to active in the 'drivers' table
+            mycursor = mysql.connection.cursor()
+            update_query = "UPDATE drivers SET driver_status = 'Active' WHERE name = %s"
+            mycursor.execute(update_query, (driver_name,))
+            mysql.connection.commit()
+
+            # Update the driver's status to active in the 'roster' table
+            update_query = "UPDATE roster SET driver_status = 'Active' WHERE name = %s"
+            mycursor.execute(update_query, (driver_name,))
+            mysql.connection.commit()
+
+            mycursor.close()
+
+        # Redirect to a success page or perform any other necessary actions
 
     return render_template('management.html', driver_name=driver_name, pickup_points=pickup_points, destinations=destinations)
 

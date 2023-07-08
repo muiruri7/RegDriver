@@ -149,6 +149,7 @@
             </ul>
         </nav>
     </header>
+
     <h1>Driver Management Dashboard</h1>
     <h2>Schedule Driver:</h2>
     <form method="POST">
@@ -180,8 +181,28 @@
       </select>
       <br><br>
     
+      <label for="suspend">Suspend Driver:</label>
+      <input type="checkbox" id="suspend" name="suspend">
+      <br><br>
+      
+      <div id="suspension_reason" style="display: none;">
+        <label for="reason">Suspension Reason:</label>
+        <input type="text" id="reason" name="reason">
+        <br><br>
+      </div>      
+    
       <input type="submit" value="Schedule Driver">
     </form>
-
+    <script>
+        // Add event listener to the suspend checkbox
+        document.getElementById('suspend').addEventListener('change', function() {
+          var suspensionReason = document.getElementById('suspension_reason');
+          if (this.checked) {
+            suspensionReason.style.display = 'block';
+          } else {
+            suspensionReason.style.display = 'none';
+          }
+        });
+    </script>
 </body>
 </html>
