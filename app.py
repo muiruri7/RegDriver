@@ -186,7 +186,7 @@ def register_driver():
         route_number = None
 
         for table, org_name in tables.items():
-            cursor.execute(f"SELECT vehicle_classification,vehicle_model, route_number FROM {table} WHERE license_plate_number = %s", (license_plate_number,))
+            cursor.execute(f"SELECT vehicle_classification, vehicle_model, route_number FROM {table} WHERE license_plate_number = %s", (license_plate_number,))
             result = cursor.fetchone()
             if result:
                 organization = org_name
@@ -202,7 +202,7 @@ def register_driver():
         cursor.execute(
             "INSERT INTO drivers (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
             (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number))
-        
+
         mysql.connection.commit()
 
         flash('Driver registration successful')
@@ -212,11 +212,19 @@ def register_driver():
 
 @app.route('/getdata')
 def getdata():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM drivers")
-    data = cur.fetchall()
-    cur.close()
-    return jsonify(data)
+    license_plate_number = request.args.get('license_plate_number')
+    if license_plate_number:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT organization, vehicle_classification, vehicle_model, route_number FROM drivers WHERE license_plate_number=%s", (license_plate_number,))
+        data = cur.fetchone()
+        cur.close()
+        return jsonify({
+            'organization': data[0],
+            'vehicle_classification': data[1],
+            'vehicle_model': data[2],
+            'route_number': data[3]
+        })
+    return jsonify({})
 
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
 def edit_driver(driver_id):

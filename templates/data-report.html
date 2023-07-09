@@ -2,17 +2,213 @@
 <html>
 <head>
     <title>Data Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+    
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    
+        .form-group {
+            margin-bottom: 20px;
+        }
+    
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+    
+        .error {
+            color: red;
+        }
+    
+        .success {
+            color: green;
+        }
+    
+        input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        /* Navigation Menu Styles */
+        nav ul {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+    
+        nav li {
+            margin-left: 10px;
+        }
+    
+        nav li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    
+        nav li a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+    
+            nav li {
+                margin-left: 0;
+                margin-bottom: 5px;
+            }
+    
+            .container {
+                padding: 10px;
+            }
+        }
+    
+        /* Responsive adjustments */
+        @media screen and (max-width: 720px) {
+            .container {
+                padding: 10px;
+            }
+    
+            .form-group label {
+                margin-bottom: 3px;
+            }
+    
+            .form-group input[type="text"],
+            .form-group input[type="password"],
+            .form-group select {
+                padding: 8px;
+            }
+    
+            .form-group button {
+                padding: 8px;
+            }
+        }
+        .styled-table {
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+        
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+        
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+        
+        .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }        
+    </style>
 </head>
 <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register Driver</a></li>
+                <li><a href="/admin">Driver Details</a></li>
+                <li><a href="/organizations">Register Organization</a></li>
+                <li><a href="/vehicles">Register Organizations Vehicle</a></li>
+                <li><a href="/data-report">Driver Report</a></li>
+            </ul>
+        </nav>
+    </header>
     <h1>Data Report</h1>
 
     <form method="POST">
-        <label for="keyword">Keyword:</label>
+        <label for="keyword">Search for Driver Data :</label>
         <input type="text" id="keyword" name="keyword">
         <input type="submit" value="Search">
     </form>
     
-    <table>
+    <table class="styled-table">
         <tr>
             <th>Name</th>
             <th>Gender</th>
@@ -33,7 +229,6 @@
                 {% endfor %}
             </tr>
         {% endfor %}
-    </table>
-    
+    </table>   
 </body>
 </html>
