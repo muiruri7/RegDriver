@@ -415,9 +415,9 @@ def upload_spreadsheet():
 @app.route('/data-report/', methods=['GET', 'POST'])
 def data_report():
     if request.method == 'POST':
-        name = request.form['name']
+        keyword = request.form['keyword']
         cur = mysql.connection.cursor()
-        query = f"SELECT * FROM roster WHERE name='{name}'"
+        query = f"SELECT * FROM drivers WHERE name LIKE '%{keyword}%' OR license_plate_number LIKE '%{keyword}%' OR organization LIKE '%{keyword}%' OR vehicle_model LIKE '%{keyword}%'"
         cur.execute(query)
         data = cur.fetchall()
         cur.close()

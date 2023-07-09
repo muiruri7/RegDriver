@@ -7,25 +7,26 @@
     <h1>Data Report</h1>
 
     <form method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name">
-        <label for="route_number">Route Number:</label>
+        <label for="keyword">Keyword:</label>
+        <input type="text" id="keyword" name="keyword">
         <input type="submit" value="Search">
     </form>
-
+    
     <table>
         <tr>
-            <th>ID</th>
             <th>Name</th>
-            <th>Clock In</th>
-            <th>Clock Out</th>
-            <th>Pickup Point</th>
-            <th>Destination</th>
+            <th>Gender</th>
+            <th>Mobile Number</th>
+            <th>License</th>
+            <th>National ID</th>
+            <th>License Plate Number</th>
+            <th>Organization</th>
+            <th>Vehicle Classification</th>
+            <th>Vehicle Model</th>
             <th>Route Number</th>
-            <th>Driver Status</th>
-            <th>Reason</th>
+            <th>ID</th>
         </tr>
-        {% for row in roster %}
+        {% for row in data %}
             <tr>
                 {% for value in row %}
                     <td>{{ value }}</td>
@@ -33,5 +34,6 @@
             </tr>
         {% endfor %}
     </table>
+    
 </body>
 </html>
