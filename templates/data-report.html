@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Report</title>
+</head>
+<body>
+    <h1>Data Report</h1>
+
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="route_number">Route Number:</label>
+        <input type="submit" value="Search">
+    </form>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Pickup Point</th>
+            <th>Destination</th>
+            <th>Route Number</th>
+            <th>Driver Status</th>
+            <th>Reason</th>
+        </tr>
+        {% for row in roster %}
+            <tr>
+                {% for value in row %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

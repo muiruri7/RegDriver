@@ -321,12 +321,6 @@ def management(driver_id):
 
         # Update the driver's status based on the admin's input
         if suspend == 'on':
-            # Update the driver's status to suspended in the 'drivers' table
-            mycursor = mysql.connection.cursor()
-            update_query = "UPDATE drivers SET driver_status = 'Suspended', reason = %s WHERE name = %s"
-            mycursor.execute(update_query, (reason, driver_name))
-            mysql.connection.commit()
-
             # Update the driver's status to suspended in the 'roster' table
             update_query = "UPDATE roster SET driver_status = 'Suspended', reason = %s WHERE name = %s"
             mycursor.execute(update_query, (reason, driver_name))
@@ -334,12 +328,6 @@ def management(driver_id):
 
             mycursor.close()
         else:
-            # Update the driver's status to active in the 'drivers' table
-            mycursor = mysql.connection.cursor()
-            update_query = "UPDATE drivers SET driver_status = 'Active' WHERE name = %s"
-            mycursor.execute(update_query, (driver_name,))
-            mysql.connection.commit()
-
             # Update the driver's status to active in the 'roster' table
             update_query = "UPDATE roster SET driver_status = 'Active' WHERE name = %s"
             mycursor.execute(update_query, (driver_name,))
@@ -423,6 +411,19 @@ def upload_spreadsheet():
             return 'Error processing spreadsheet: {}'.format(str(e)), 500
     else:
         return 'Invalid spreadsheet file', 400
+
+@app.route('/data-report/', methods=['GET', 'POST'])
+def data_report():
+    if request.method == 'POST':
+        name = request.form['name']
+        cur = mysql.connection.cursor()
+        query = f"SELECT * FROM roster WHERE name='{name}'"
+        cur.execute(query)
+        data = cur.fetchall()
+        cur.close()
+        return render_template("data-report.html", data=data)
+    else:
+        return render_template("data-report.html")
 
 @app.route('/about')
 def about():
