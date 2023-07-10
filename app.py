@@ -364,7 +364,6 @@ def organizations():
                 vehicle_status ENUM('suspended', 'engaged')
             )
         '''
-
         try:
             with mysql.connection.cursor() as cursor:
                 cursor.execute(create_table_query)
@@ -425,11 +424,35 @@ def data_report():
     if request.method == 'POST':
         keyword = request.form['keyword']
         cur = mysql.connection.cursor()
-        query = f"SELECT * FROM drivers WHERE name LIKE '%{keyword}%' OR license_plate_number LIKE '%{keyword}%' OR organization LIKE '%{keyword}%' OR vehicle_model LIKE '%{keyword}%'"
-        cur.execute(query)
-        data = cur.fetchall()
+        query1 = f"SELECT * FROM drivers WHERE name LIKE '%{keyword}%' OR license_plate_number LIKE '%{keyword}%' OR organization LIKE '%{keyword}%' OR vehicle_model LIKE '%{keyword}%'"
+        cur.execute(query1)
+        data1 = cur.fetchall()
+        query2 = f"SELECT * FROM roster WHERE name LIKE '%{keyword}%' OR pickup_point LIKE '%{keyword}%' OR destination LIKE '%{keyword}%' OR driver_status LIKE '%{keyword}%' OR reason LIKE '%{keyword}%'"
+        cur.execute(query2)
+        data2 = cur.fetchall()
+        query3 = "SELECT COUNT(*) FROM drivers"
+        cur.execute(query3)
+        num_drivers = cur.fetchone()[0]
+        query4 = "SELECT route_number, COUNT(*) FROM drivers GROUP BY route_number"
+        cur.execute(query4)
+        drivers_per_route = cur.fetchall()
+        query5 = "SELECT vehicle_classification, COUNT(*) FROM drivers GROUP BY vehicle_classification"
+        cur.execute(query5)
+        vehicles_per_type = cur.fetchall()
+        query6 = "SELECT organization, COUNT(*) FROM drivers GROUP BY organization"
+        cur.execute(query6)
+        drivers_per_organization = cur.fetchall()
+        query7 = "SELECT COUNT(*) FROM roster"
+        cur.execute(query7)
+        num_rosters = cur.fetchone()[0]
+        query8 = "SELECT route_number, COUNT(*) FROM roster GROUP BY route_number"
+        cur.execute(query8)
+        rosters_per_route = cur.fetchall()
+        query9 = "SELECT driver_status, COUNT(*) FROM roster GROUP BY driver_status"
+        cur.execute(query9)
+        rosters_per_status = cur.fetchall()
         cur.close()
-        return render_template("data-report.html", data=data)
+        return render_template("data-report.html", data1=data1, data2=data2, num_drivers=num_drivers, drivers_per_route=drivers_per_route, vehicles_per_type=vehicles_per_type, drivers_per_organization=drivers_per_organization, num_rosters=num_rosters, rosters_per_route=rosters_per_route, rosters_per_status=rosters_per_status)
     else:
         return render_template("data-report.html")
 

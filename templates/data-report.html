@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Data Report</title>
+    <title>Driver Data Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -201,14 +201,13 @@
         </nav>
     </header>
     <h1>Data Report</h1>
-
     <form method="POST">
-        <label for="keyword">Search for Driver Data :</label>
+        <label for="keyword">Keyword:</label>
         <input type="text" id="keyword" name="keyword">
         <input type="submit" value="Search">
     </form>
-    
-    <table class="styled-table">
+    <h2>Driver Data</h2>
+    <table>
         <tr>
             <th>Name</th>
             <th>Gender</th>
@@ -222,13 +221,67 @@
             <th>Route Number</th>
             <th>ID</th>
         </tr>
-        {% for row in data %}
+        {% for row in data1 %}
             <tr>
                 {% for value in row %}
                     <td>{{ value }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
-    </table>   
+    </table>
+    <h2>Driver Roster</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Pickup Point</th>
+            <th>Destination</th>
+            <th>Route Number</th>
+            <th>Driver Status</th>
+            <th>Reason</th>
+        </tr>
+        {% for row in data2 %}
+            <tr>
+                {% for value in row %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <h2>Data Analysis</h2>
+    <p>Total number of drivers: {{ num_drivers }}</p>
+    <h3>Number of Drivers per Route</h3>
+    <ul>
+        {% for row in drivers_per_route %}
+            <li>Route {{ row[0] }}: {{ row[1] }} drivers</li>
+        {% endfor %}
+    </ul>
+    <h3>Number of Vehicles per Type</h3>
+    <ul>
+        {% for row in vehicles_per_type %}
+            <li>{{ row[0] }}: {{ row[1] }} vehicles</li>
+        {% endfor %}
+    </ul>
+    <h3>Number of Drivers per Organization</h3>
+    <ul>
+        {% for row in drivers_per_organization %}
+            <li>{{ row[0] }}: {{ row[1] }} drivers</li>
+        {% endfor %}
+    </ul>
+    <p>Total number of rosters: {{ num_rosters }}</p>
+    <h3>Number of Rosters per Route</h3>
+    <ul>
+        {% for row in rosters_per_route %}
+            <li>Route {{ row[0] }}: {{ row[1] }} rosters</li>
+        {% endfor %}
+    </ul>
+    <h3>Number of Rosters per Driver Status</h3>
+    <ul>
+        {% for row in rosters_per_status %}
+            <li>{{ row[0] }}: {{ row[1] }} rosters</li>
+        {% endfor %}
+    </ul>       
 </body>
 </html>
