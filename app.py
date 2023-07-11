@@ -160,6 +160,44 @@ def delete_driver():
     else:
         return redirect(url_for('login'))
 
+@app.route('/delete_roster', methods=['POST'])
+def delete_roster():
+    roster_id = request.form['roster_id']
+    cursor = mysql.connection.cursor()
+    cursor.execute("DELETE FROM roster WHERE id=%s", (roster_id,))
+    mysql.connection.commit()
+    cursor.close()
+    flash('Roster deleted successfully!')
+    return redirect(url_for('admin'))
+
+@app.route('/edit_roster/<int:roster_id>', methods=['GET', 'POST'])
+def edit_roster(roster_id):
+    if request.method == 'GET':
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM roster WHERE id=%s", (roster_id,))
+        roster = cursor.fetchone()
+        cursor.close()
+        return render_template('edit_roster.html', roster=roster)
+    elif request.method == 'POST':
+        name = request.form['name']
+        clock_in = datetime.strptime(request.form['clock_in'], '%Y-%m-%dT%H:%M')
+        clock_out = datetime.strptime(request.form['clock_out'], '%Y-%m-%dT%H:%M')
+        pick_up_point = request.form['pick_up_point']
+        destination = request.form['destination']
+        new_route_number = request.form['new_route_number']
+        driver_status = request.form['driver_status']
+        reason = request.form['reason']
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute(
+            "UPDATE roster SET name=%s, clock_in=%s, clock_out=%s, pickup_point=%s, destination=%s, route_number=%s, driver_status=%s, reason=%s WHERE id=%s",
+            (name, clock_in, clock_out, pick_up_point, destination, new_route_number, driver_status, reason, roster_id)
+        )
+        mysql.connection.commit()
+        cursor.close()
+        flash('Roster updated successfully!')
+        return redirect(url_for('admin'))
+
 @app.route('/register', methods=['GET', 'POST'])
 def register_driver():
     if request.method == 'POST':

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Edit Roster</h1>
+    <form action="{{ url_for('edit_roster', roster_id=roster[0]) }}" method="POST">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ roster[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="clock_in">Clock-In</label>
+            <input type="datetime-local" class="form-control" id="clock_in" name="clock_in" value="{{ roster.clock_in.strftime('%Y-%m-%dT%H:%M') if roster.clock_in else '' }}" required>
+        </div>                                  
+        <div class="form-group">
+            <label for="clock_out">Clock-Out</label>
+            <input type="datetime-local" class="form-control" id="clock_out" name="clock_out" value="{{ roster.clock_out.strftime('%Y-%m-%dT%H:%M') if roster.clock_out else '' }}" required>
+        </div>        
+        <div class="form-group">
+            <label for="pick_up_point">PickUp Point</label>
+            <input type="text" class="form-control" id="pick_up_point" name="pick_up_point" value="{{ roster[4] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="destination">Destination</label>
+            <input type="text" class="form-control" id="destination" name="destination" value="{{ roster[5] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="new_route_number">New Route Number</label>
+            <input type="text" class="form-control" id="new_route_number" name="new_route_number" value="{{ roster[6] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="driver_status">Driver Status</label>
+            <select class="form-control" id="driver_status" name="driver_status" required>
+                <option value="" disabled selected>Select a status</option>
+                <option value="active" {% if roster[7] == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if roster[7] == 'inactive' %}selected{% endif %}>Inactive</option>                 
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="reason">Reason</label>
+            <textarea class="form-control" id="reason" name="reason">{{ roster[8] }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Roster</button>
+    </form>
+{% endblock %}
