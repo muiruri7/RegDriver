@@ -256,13 +256,21 @@ def getdata():
         cur.execute("SELECT organization, vehicle_classification, vehicle_model, route_number FROM drivers WHERE license_plate_number=%s", (license_plate_number,))
         data = cur.fetchone()
         cur.close()
-        return jsonify({
-            'organization': data[0],
-            'vehicle_classification': data[1],
-            'vehicle_model': data[2],
-            'route_number': data[3]
-        })
-    return jsonify({})
+        
+        if data is not None:
+            return jsonify({
+                'organization': data[0],
+                'vehicle_classification': data[1],
+                'vehicle_model': data[2],
+                'route_number': data[3]
+            })
+        
+    return jsonify({
+        'organization': None,
+        'vehicle_classification': None,
+        'vehicle_model': None,
+        'route_number': None
+    })
 
 @app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
 def edit_driver(driver_id):
