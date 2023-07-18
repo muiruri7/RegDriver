@@ -286,13 +286,13 @@ def edit_driver(driver_id):
         name = request.form.get('name')
         gender = request.form.get('gender')
         mobile_number = request.form.get('mobile_number')
-        license = request.form('license')
+        license = request.form.get('license')
         national_id = request.form.get('national_id')
-        license_plate_number = request.form('license_plate_number')
-        organization = request.form('organization')
-        vehicle_classification = request.form(vehicle_classification)
-        vehicle_model = request.form('vehicle_model')
-        route_number = request.form('route_number')
+        license_plate_number = request.form.get('license_plate_number')
+        organization = request.form.get('organization')
+        vehicle_classification = request.form.get('vehicle_classification')
+        vehicle_model = request.form.get('vehicle_model')
+        route_number = request.form.get('route_number')
 
         # Update driver information in the database
         cursor = mysql.connection.cursor()
@@ -321,19 +321,14 @@ def management(driver_id):
     if request.method == 'POST':
         # Get the driver name
         name = request.form['name']
-
         # Get the clock-in time
         clock_in = request.form['clock_in']
-
         # Get the clock-out time
         clock_out = request.form['clock_out']
-
         # Get the pickup point
         pickup_point = request.form['pickup_point']
-
         # Get the destination
         destination = request.form['destination']
-
         # Retrieve route number from routes table
         sql = "SELECT route_number FROM routes WHERE pickup_point = %s AND destination = %s"
         val = (pickup_point, destination)
