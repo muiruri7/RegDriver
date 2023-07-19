@@ -52,13 +52,10 @@ def store_driver_registration_data(name, gender, mobile_number, license, nationa
     # Set default value for route_number if it is None or empty
     if not route_number:
         route_number = 'N/A'
-
     cursor = mysql.connection.cursor()
     cursor.execute(
         "INSERT INTO drivers (name, gender, mobile_number, license, national_id, license_plate_number, "
-        "organization, vehicle_classification, vehicle_ model, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, mobile_number, license,
-         national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number))
-
+        "organization, vehicle_classification, vehicle_ model, route_number) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (name, gender, mobile_number, license, national_id, license_plate_number, organization, vehicle_classification, vehicle_model, route_number))
     mysql.connection.commit()
     cursor.close()
 
