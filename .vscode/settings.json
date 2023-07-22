@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
+        "datetime",
         "getdata",
         "iterrows",
         "jsonify",
         "lopha",
+        "matatu",
         "mpya",
         "mycursor",
         "mysqldb",
