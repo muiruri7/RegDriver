@@ -19,8 +19,8 @@ h2 {
 
 input[type="submit"],
 button[type="submit"] {
-    display: block;
-    width: 100%;
+    display: grid;
+    width: 70%;
     padding: 10px;
     background-color: #4CAF50;
     color: white;

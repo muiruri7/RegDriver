@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, flash, session, url
 from flask_mysqldb import MySQL
 from datetime import datetime
 from functools import wraps
-import sqlite3
 import os
 import mysql.connector
 from werkzeug.utils import secure_filename
