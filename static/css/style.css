@@ -19,8 +19,8 @@ h2 {
 
 input[type="submit"],
 button[type="submit"] {
-    display: grid;
-    width: 70%;
+    display: block;
+    width: 100%;
     padding: 10px;
     background-color: #4CAF50;
     color: white;
@@ -136,9 +136,10 @@ nav li a:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Organizations Page */
 .container.organizations-container {
-    padding: 20px;
+    padding: 80px;
+    margin: 0 auto;
+    width: 600px;
 }
 
 /* Data Report Page */
