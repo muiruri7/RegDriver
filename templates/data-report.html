@@ -175,7 +175,7 @@
         <input type="submit" value="Search">
     </form>
     <h2>Driver Data</h2>
-    <table>
+    <table class="styled-table">
         <tr>
             <th>Name</th>
             <th>Gender</th>
@@ -198,7 +198,7 @@
         {% endfor %}
     </table>
     <h2>Driver Roster</h2>
-    <table>
+    <table class="styled-table">
         <tr>
             <th>ID</th>
             <th>Name</th>
@@ -219,37 +219,78 @@
         {% endfor %}
     </table>
     <h2>Data Analysis</h2>
-    <p>Total number of drivers: {{ num_drivers }}</p>
+    <aside><b>Total number of drivers:</b> {{ num_drivers }}</aside>
+    
     <h3>Number of Drivers per Route</h3>
-    <ul>
+    <table class="styled-table">
+        <tr>
+            <th>Route</th>
+            <th>Number of Drivers</th>
+        </tr>
         {% for row in drivers_per_route %}
-            <li>Route {{ row[0] }}: {{ row[1] }} drivers</li>
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
+    
     <h3>Number of Vehicles per Type</h3>
-    <ul>
+    <table class="styled-table">
+        <tr>
+            <th>Type</th>
+            <th>Number of Vehicles</th>
+        </tr>
         {% for row in vehicles_per_type %}
-            <li>{{ row[0] }}: {{ row[1] }} vehicles</li>
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
+    
     <h3>Number of Drivers per Organization</h3>
-    <ul>
+    <table class="styled-table">
+        <tr>
+            <th>Organization</th>
+            <th>Number of Drivers</th>
+        </tr>
         {% for row in drivers_per_organization %}
-            <li>{{ row[0] }}: {{ row[1] }} drivers</li>
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
         {% endfor %}
-    </ul>
-    <p>Total number of rosters: {{ num_rosters }}</p>
+    </table>
+    
+    <aside><b>Total number of rosters: </b>{{ num_rosters }}</aside>
+    
     <h3>Number of Rosters per Route</h3>
-    <ul>
+    <table class="styled-table">
+        <tr>
+            <th>Route</th>
+            <th>Number of Rosters</th>
+        </tr>
         {% for row in rosters_per_route %}
-            <li>Route {{ row[0] }}: {{ row[1] }} rosters</li>
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+    </table>
+    
     <h3>Number of Rosters per Driver Status</h3>
-    <ul>
+    <table class="styled-table">
+        <tr>
+            <th>Status</th>
+            <th>Number of Rosters</th>
+        </tr>
         {% for row in rosters_per_status %}
-            <li>{{ row[0] }}: {{ row[1] }} rosters</li>
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+            </tr>
         {% endfor %}
-    </ul>       
+    </table>      
 </body>
 </html>
