@@ -80,7 +80,6 @@ def insert_vehicle(org_name, license_plate, vehicle_type, vehicle_model, vehicle
             '{driver_status}'
         )
     '''
-
     try:
         cursor = mysql.connection.cursor()
         cursor.execute(insert_query)
