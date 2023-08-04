@@ -124,7 +124,6 @@ def home():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    if 'role' in session and session['role'] == 'admin':
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM drivers")
         drivers = cursor.fetchall()
@@ -133,9 +132,6 @@ def admin():
         driver_id = None
         cursor.close()
         return render_template('admin.html', drivers=drivers, roster=roster, driver_id=driver_id)
-    else:
-        return redirect(url_for('login'))
-
 
 @app.route('/delete_driver', methods=['POST'])
 def delete_driver():
