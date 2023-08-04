@@ -124,6 +124,8 @@ def home():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
+    print(session.get('username'))
+    print(session.get('role'))
     if 'username' in session and session['role'] == 'admin':
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM drivers")
