@@ -34,6 +34,7 @@ def retrieve_admin(username):
 
 def login(username, password):
     admin = retrieve_admin(username)
+    print(admin)  # Add this line to display the value of the admin tuple
     if admin and password == admin[2]:  # Compare the entered password with admin[2]
         return "Login successful"
     else:
@@ -98,7 +99,7 @@ def login():
         password = request.form['password']
         admin = retrieve_admin(username)
         print(admin)  # Print the value of admin for debugging
-        if admin and password == admin[1]:  # Compare the entered password with admin[1]
+        if admin and password == admin[2]:  # Compare the entered password with admin[2]
             session['username'] = admin[0]
             session['role'] = admin[2]
             return redirect(url_for('home'))
@@ -106,7 +107,6 @@ def login():
             error = 'Invalid username or password'
             return render_template('login.html', error=error)
     return render_template('login.html')
-
 
 @app.route('/')
 def root():
