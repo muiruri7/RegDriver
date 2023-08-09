@@ -85,6 +85,8 @@
         }
 
         table {
+            display: flex;
+            justify-content: center;
             border-collapse: collapse;
             margin: 25px 0;
             font-size: 0.9em;
@@ -119,6 +121,10 @@
         table tbody tr.active-row {
             font-weight: bold;
             color: #009879;
+        }
+        aside{
+            display: flex;
+            justify-content: center;
         }
 
         /* Media queries for responsiveness */
@@ -219,9 +225,9 @@
         {% endfor %}
     </table>
     <h2>Data Analysis</h2>
-    <aside><b>Total number of drivers:</b> {{ num_drivers }}</aside>
+    <aside><b>Total number of drivers:</b><br> {{ num_drivers }}</aside>
     
-    <h3>Number of Drivers per Route</h3>
+    <h2>Number of Drivers per Route</h2>
     <table class="styled-table">
         <tr>
             <th>Route</th>
@@ -235,7 +241,7 @@
         {% endfor %}
     </table>
     
-    <h3>Number of Vehicles per Type</h3>
+    <h2>Number of Vehicles per Type</h2>
     <table class="styled-table">
         <tr>
             <th>Type</th>
@@ -249,7 +255,7 @@
         {% endfor %}
     </table>
     
-    <h3>Number of Drivers per Organization</h3>
+    <h2>Number of Drivers per Organization</h2>
     <table class="styled-table">
         <tr>
             <th>Organization</th>
@@ -265,7 +271,7 @@
     
     <aside><b>Total number of rosters: </b>{{ num_rosters }}</aside>
     
-    <h3>Number of Rosters per Route</h3>
+    <h2>Number of Rosters per Route</h2>
     <table class="styled-table">
         <tr>
             <th>Route</th>
@@ -279,7 +285,7 @@
         {% endfor %}
     </table>
     
-    <h3>Number of Rosters per Driver Status</h3>
+    <h2>Number of Rosters per Driver Status</h2>
     <table class="styled-table">
         <tr>
             <th>Status</th>
